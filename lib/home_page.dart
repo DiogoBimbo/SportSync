@@ -37,19 +37,22 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Text(
-                        'Desperte o atleta dentro de você e conquiste novos desafios!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
+                      const Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Text(
+                          'Desperte o atleta dentro de você e conquiste novos desafios!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Inter',
+                          ),
                         ),
                       ),
                       const SizedBox(height: 40.0),
                       SizedBox(
-                        width: 350.0,
+                        width: 300.0,
                         height: 50.0,
                         child: ElevatedButton(
                           onPressed: () {
@@ -74,7 +77,7 @@ class HomePage extends StatelessWidget {
                       ),
                       const SizedBox(height: 15.0),
                       SizedBox(
-                        width: 350.0,
+                        width: 300.0,
                         height: 50.0,
                         child: ElevatedButton(
                           onPressed: () {

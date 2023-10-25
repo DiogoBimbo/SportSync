@@ -8,11 +8,11 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PI App',
-      theme: ThemeData(
+      theme: ThemeData( 
         primarySwatch: Colors.blue,
         brightness: Brightness.dark
       ),
-      home: const HomePage(),
+      home: const HomePage()
     );
   }
 }
