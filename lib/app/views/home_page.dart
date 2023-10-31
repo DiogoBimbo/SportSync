@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 28.0,
+                            fontSize: 26.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Inter',
                           ),
@@ -84,8 +84,9 @@ class HomePage extends StatelessWidget {
                           height: 50.0,
                           child: ElevatedButton(
                             onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()),
                               );
                             },
                             style: ElevatedButton.styleFrom(

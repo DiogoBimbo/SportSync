@@ -44,14 +44,14 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Customizações do Login
+    final corPrincipal = Color.fromARGB(255, 52, 39, 194);
+    final inputBorder = BorderRadius.all(Radius.circular(50));
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/fundo_inicial.jpg',
-            fit: BoxFit.cover,
-          ),
           FlutterLogin(
             logo: const AssetImage('assets/images/logo.jpg'),
             onLogin: _authUser,
@@ -62,15 +62,72 @@ class LoginScreen extends StatelessWidget {
               ));
             },
             onRecoverPassword: _recoverPassword,
+            messages: LoginMessages(
+              userHint: 'Email',
+              passwordHint: 'Senha',
+              confirmPasswordHint: 'Confirmar senha',
+              loginButton: 'LOGIN',
+              signupButton: 'CADASTRAR',
+              forgotPasswordButton: 'Equeci minha senha',
+              recoverPasswordButton: 'RECUPERAR',
+              goBackButton: 'VOLTAR',
+              confirmPasswordError: 'Não corresponde!',
+              recoverPasswordIntro: 'Recupere sua senha aqui',
+              recoverPasswordDescription:
+                  'Nós enviaremos sua senha em texto para esta conta de email',
+              recoverPasswordSuccess: 'Senha recuperada com sucesso!',
+            ),
             theme: LoginTheme(
-              pageColorDark: Colors.black.withOpacity(0.0),
-              primaryColor: const Color.fromARGB(255, 52, 39, 194),
-              accentColor: Colors.yellow,
-              errorColor: Colors.deepOrange,
+              accentColor: corPrincipal,
+              errorColor: Colors.red,
               titleStyle: const TextStyle(
                 color: Colors.greenAccent,
                 fontFamily: 'Inter',
               ),
+              bodyStyle: const TextStyle(
+                fontFamily: 'Inter',
+              ),
+              textFieldStyle: const TextStyle(
+                fontFamily: 'Inter',
+              ),
+              buttonStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.bold,
+              ),
+              buttonTheme: LoginButtonTheme(
+                backgroundColor: corPrincipal,
+              ),
+              // buttonStyle: const TextStyle(
+              //   fontWeight: FontWeight.bold,
+              // ),
+              inputTheme: InputDecorationTheme(
+                labelStyle: const TextStyle(
+                  fontFamily: 'Inter',
+                  color: Colors.white,
+                  ),
+                filled: true,
+                contentPadding: EdgeInsets.zero,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white.withOpacity(0.0),
+                  ),
+                  borderRadius: inputBorder,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: corPrincipal),
+                  borderRadius: inputBorder,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: 10,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ),
         ],
