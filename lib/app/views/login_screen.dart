@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'dashboard_screen.dart';
+import 'amigos_inicial_screen.dart';
 
 const users = {
   'dribbble@gmail.com': '12345',
@@ -50,16 +50,17 @@ class LoginScreen extends StatelessWidget {
 
     return Scaffold(
       body: Stack(
-        fit: StackFit.expand,
         children: [
           FlutterLogin(
             logo: const AssetImage('assets/images/logo.jpg'),
             onLogin: _authUser,
             onSignup: _signupUser,
             onSubmitAnimationCompleted: () {
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const DashboardScreen(),
-              ));
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) => const AmigosInicialScreen()),
+                (route) => false,
+              );
             },
             onRecoverPassword: _recoverPassword,
             messages: LoginMessages(
@@ -114,7 +115,7 @@ class LoginScreen extends StatelessWidget {
                   borderRadius: inputBorder,
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: corPrincipal),
+                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
                   borderRadius: inputBorder,
                 ),
               ),
