@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'amigos_inicial_screen.dart';
+import 'package:pi_app/app/styles/styles.dart';
 
 const users = {
   'dribbble@gmail.com': '12345',
@@ -44,10 +45,6 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Customizações do Login
-    final corPrincipal = Color.fromARGB(255, 52, 39, 194);
-    final inputBorder = BorderRadius.all(Radius.circular(50));
-
     return Scaffold(
       body: Stack(
         children: [
@@ -58,7 +55,9 @@ class LoginScreen extends StatelessWidget {
             onSubmitAnimationCompleted: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (BuildContext context) => const AmigosInicialScreen()),
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        const AmigosInicialScreen()),
                 (route) => false,
               );
             },
@@ -79,7 +78,7 @@ class LoginScreen extends StatelessWidget {
               recoverPasswordSuccess: 'Senha recuperada com sucesso!',
             ),
             theme: LoginTheme(
-              accentColor: corPrincipal,
+              accentColor: Styles.corPrincipal,
               errorColor: Colors.red,
               titleStyle: const TextStyle(
                 color: Colors.greenAccent,
@@ -95,8 +94,8 @@ class LoginScreen extends StatelessWidget {
                 fontFamily: 'Inter',
                 fontWeight: FontWeight.bold,
               ),
-              buttonTheme: LoginButtonTheme(
-                backgroundColor: corPrincipal,
+              buttonTheme: const LoginButtonTheme(
+                backgroundColor: Styles.corPrincipal,
               ),
               // buttonStyle: const TextStyle(
               //   fontWeight: FontWeight.bold,
@@ -105,18 +104,18 @@ class LoginScreen extends StatelessWidget {
                 labelStyle: const TextStyle(
                   fontFamily: 'Inter',
                   color: Colors.white,
-                  ),
+                ),
                 filled: true,
                 contentPadding: EdgeInsets.zero,
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.white.withOpacity(0.0),
                   ),
-                  borderRadius: inputBorder,
+                  borderRadius: Styles.inputBorderLogin,
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: inputBorder,
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 2.0),
+                  borderRadius: Styles.inputBorderLogin,
                 ),
               ),
             ),

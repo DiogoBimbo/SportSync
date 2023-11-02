@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/views/grupos_screen.dart';
+import 'package:pi_app/app/styles/styles.dart';
 
 class AmigosInicialScreen extends StatefulWidget {
   const AmigosInicialScreen({Key? key}) : super(key: key);
@@ -10,7 +11,6 @@ class AmigosInicialScreen extends StatefulWidget {
 
 class _AmigosInicialState extends State<AmigosInicialScreen> {
   List<String> pessoas = []; // Lista de amigos a ser obtida do banco de dados
-  final corPrincipal = Color.fromARGB(255, 52, 39, 194);
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,9 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
               ),
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 16.0,
+                fontSize: 15.0,
                 fontFamily: 'Inter',
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
               ),
             ),
             Expanded(
@@ -93,7 +93,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all<Color>(corPrincipal),
+                          MaterialStateProperty.all<Color>(Styles.corPrincipal),
                     ),
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
