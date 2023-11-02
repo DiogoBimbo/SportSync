@@ -20,7 +20,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
           'Adicione amigos para começar :)',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20.0,
+            fontSize: 18.0,
             fontFamily: 'Inter',
             fontWeight: FontWeight.bold,
           ),

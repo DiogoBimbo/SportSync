@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 26.0,
+                            fontSize: 24.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Inter',
                           ),
