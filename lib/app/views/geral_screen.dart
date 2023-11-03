@@ -7,17 +7,23 @@ class GeralScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-    final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
     const int tabsCount = 4;
 
     return DefaultTabController(
-      initialIndex: 1,
+      initialIndex: 0,
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('AppBar Sample'),
+          title: const Text('Nome do App'), // Editar nome do app
+          actions: [
+            IconButton(
+              icon: const CircleAvatar(
+                  backgroundImage: AssetImage(
+                      'usuario.png') // Colocar a imagem do usuário integrado com backend
+                  ),
+              onPressed: () {},
+            ),
+          ],
         ),
         body: TabBarView(
           children: <Widget>[
@@ -35,29 +41,48 @@ class GeralScreen extends StatelessWidget {
                 ),
           ],
         ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context)
-              .colorScheme
-              .surface, // Cor padrão do modo escuro
-          child: TabBar(
-            tabs: <Widget>[
-              Tab(
-                icon: const Icon(Icons.cloud_outlined),
-                text: titles[0],
+        bottomNavigationBar: Material(
+          elevation: 5.0,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  spreadRadius: 5,
+                  blurRadius: 8,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: TabBar(
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
+              labelStyle: const TextStyle(
+                fontFamily: 'Inter',
+                fontWeight: FontWeight.w500,
+                fontSize: 13,
               ),
-              Tab(
-                icon: const Icon(Icons.beach_access_sharp),
-                text: titles[1],
-              ),
-              Tab(
-                icon: const Icon(Icons.brightness_5_sharp),
-                text: titles[2],
-              ),
-              Tab(
-                icon: const Icon(Icons.brightness_5_sharp),
-                text: titles[3],
-              ),
-            ],
+              indicatorColor: Colors.white,
+              tabs: <Widget>[
+                Tab(
+                  icon: const Icon(Icons.groups),
+                  text: titles[0],
+                ),
+                Tab(
+                  icon: const Icon(Icons.people),
+                  text: titles[1],
+                ),
+                Tab(
+                  icon: const Icon(Icons.location_on),
+                  text: titles[2],
+                ),
+                Tab(
+                  icon: const Icon(Icons.assignment),
+                  text: titles[3],
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -92,7 +92,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                         'Avançar',
                         style: TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: 15.0,
+                          fontSize: 13.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
