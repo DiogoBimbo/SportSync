@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pi_app/app/views/local_screen.dart';
 
 List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
 
@@ -7,9 +8,6 @@ class GeralScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-    final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
     const int tabsCount = 4;
 
     return DefaultTabController(
@@ -18,21 +16,15 @@ class GeralScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('AppBar Sample'),
+          notificationPredicate: (ScrollNotification notification) {
+            return notification.depth == 1;
+          },
+          scrolledUnderElevation: 4.0,
+          shadowColor: Theme.of(context).shadowColor,
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: <Widget>[
-            ListView(
-                // Página de grupos (importar aqui)
-                ),
-            ListView(
-                // Página de amigos (importar aqui)
-                ),
-            ListView(
-                // Página de locais (importar aqui)
-                ),
-            ListView(
-                // Página de missões (importar aqui)
-                ),
+            LocalScreen()
           ],
         ),
         bottomNavigationBar: Container(
