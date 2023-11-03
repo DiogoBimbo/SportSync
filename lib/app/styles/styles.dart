@@ -1,22 +1,51 @@
 import 'package:flutter/material.dart';
 
-// Arquivo contendo estilos reutilizáveis - á definir(apagar comentários quando estiver pronto)
 class Styles {
-  // Texto da barra de AmigosInicialScreen
-  static const TextStyle tituloBarra = TextStyle(
+  static const TextStyle adcAmigos = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 18,
     fontWeight: FontWeight.bold,
   );
 
-  // Texto da barra de pesquisa e dos nomes dos amigos na AmigosInicialScreen
-  static const TextStyle subtitulo = TextStyle(
+  static const TextStyle textoDestacado = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 15,
     fontWeight: FontWeight.w600,
   );
 
-  // Texto em nenhuma tela por enquanto
   static const TextStyle texto = TextStyle(
+    fontFamily: 'Inter',
     fontSize: 15,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle subtitulo = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 15,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle titulo = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 18,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle tituloBarra = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 15,
+    fontWeight: FontWeight.w800,
+  );
+
+  static const TextStyle conteudo = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 13,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle tag = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 13,
     fontWeight: FontWeight.w400,
   );
 

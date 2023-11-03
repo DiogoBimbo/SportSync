@@ -1,1 +1,0 @@
-// criar o menu inferior com os ícones de navegação (grupos, amigos, locais, missões)

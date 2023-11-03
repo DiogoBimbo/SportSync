@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pi_app/app/views/grupos_screen.dart';
+import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 
 class AmigosInicialScreen extends StatefulWidget {
@@ -18,12 +18,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
       appBar: AppBar(
         title: const Text(
           'Adicione amigos para começar :)',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.bold,
-          ),
+          style: Styles.adcAmigos,
         ),
       ),
       body: Padding(
@@ -44,12 +39,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                 filled: true,
                 prefixIcon: Icon(Icons.search, color: Colors.white),
               ),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15.0,
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w600,
-              ),
+              style: Styles.textoDestacado,
             ),
             Expanded(
               child: Padding(
@@ -67,11 +57,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                         ),
                         title: const Text(
                           'Nome da pessoa',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Styles.textoDestacado,
                         ),
                         trailing: IconButton(
                           onPressed: () {
@@ -97,7 +83,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const GruposScreen(),
+                        builder: (context) => const GeralScreen(),
                       ));
                     },
                     child: const Padding(
@@ -106,6 +92,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                         'Avançar',
                         style: TextStyle(
                           fontFamily: 'Inter',
+                          fontSize: 15.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),

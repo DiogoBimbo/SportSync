@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/views/login_screen.dart';
+import 'package:pi_app/app/styles/styles.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -63,8 +64,7 @@ class HomePage extends StatelessWidget {
                               ));
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  const Color.fromARGB(255, 52, 39, 194),
+                              backgroundColor: Styles.corPrincipal,
                               // Define a cor de fundo personalizada
                               foregroundColor: Colors.white,
                               // Define a cor do texto personalizada
@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
                               'Criar uma conta',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 16.0,
+                                fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Inter',
                               ),
@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
                               'Já tenho uma conta',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 16.0,
+                                fontSize: 15.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
