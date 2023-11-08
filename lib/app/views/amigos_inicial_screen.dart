@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 
 class AmigosInicialScreen extends StatefulWidget {
   const AmigosInicialScreen({Key? key}) : super(key: key);
@@ -24,51 +25,85 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const TextField(
-              decoration: InputDecoration(
-                hintText: 'Pesquisar por amigos...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                ),
-                filled: true,
-                prefixIcon: Icon(Icons.search, color: Colors.white),
+            const BarraPesquisa(hintText: 'Pesquisar por pessoas...'),
+            Padding(
+              padding: EdgeInsets.only(
+                top: pessoas.isEmpty ? 0.0 : 20.0,
+                bottom: 20.0,
               ),
-              style: Styles.textoDestacado,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: pessoas
+                      .map(
+                        (nome) => Padding(
+                          padding: const EdgeInsets.only(right: 12.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              removerAmigo(nome);
+                            },
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: Image.network(
+                                    'https://via.placeholder.com/150',
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[700],
+                                      shape: BoxShape.circle,
+                                    ),
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: ListTile(
-                        leading: const CircleAvatar(
-                          radius: 20,
-                          backgroundImage:
-                              NetworkImage('https://via.placeholder.com/150'),
-                        ),
-                        title: const Text(
-                          'Nome da pessoa',
-                          style: Styles.textoDestacado,
-                        ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            adicionarAmigo(pessoas[index]);
-                          },
-                          icon: const Icon(Icons.add),
-                        ),
+              child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        radius: 22,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
                       ),
-                    );
-                  },
-                ),
+                      title: const Text(
+                        'Nome da pessoa',
+                        style: Styles.textoDestacado,
+                      ),
+                      trailing: IconButton(
+                        onPressed: () {
+                          adicionarAmigo('Nome da pessoa');
+                        },
+                        icon: const Icon(Icons.add),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
             Padding(
@@ -92,7 +127,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                         'Avançar',
                         style: TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: 13.0,
+                          fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
@@ -110,7 +145,13 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
 
   void adicionarAmigo(String amigo) {
     setState(() {
-      pessoas.add(amigo);
+      pessoas.add(amigo); // implementar a adição do amigo no banco de dados
+    });
+  }
+
+  void removerAmigo(String amigo) {
+    setState(() {
+      pessoas.remove(amigo); // implementar a remoção do amigo no banco de dados
     });
   }
 }

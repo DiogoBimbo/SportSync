@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pi_app/app/views/amigos_screen.dart';
+import 'package:pi_app/app/views/grupos_screen.dart';
 
 List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
 
@@ -27,18 +29,8 @@ class GeralScreen extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            ListView(
-                // Página de grupos (importar aqui)
-                ),
-            ListView(
-                // Página de amigos (importar aqui)
-                ),
-            ListView(
-                // Página de locais (importar aqui)
-                ),
-            ListView(
-                // Página de missões (importar aqui)
-                ),
+            GruposScreen(),
+            AmigosScreen(),
           ],
         ),
         bottomNavigationBar: Material(
@@ -51,7 +43,7 @@ class GeralScreen extends StatelessWidget {
                   color: Colors.black.withOpacity(0.2),
                   spreadRadius: 5,
                   blurRadius: 8,
-                  offset: Offset(0, 3),
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),

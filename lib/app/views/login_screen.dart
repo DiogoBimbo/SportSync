@@ -97,9 +97,6 @@ class LoginScreen extends StatelessWidget {
               buttonTheme: const LoginButtonTheme(
                 backgroundColor: Styles.corPrincipal,
               ),
-              // buttonStyle: const TextStyle(
-              //   fontWeight: FontWeight.bold,
-              // ),
               inputTheme: InputDecorationTheme(
                 labelStyle: const TextStyle(
                   fontFamily: 'Inter',

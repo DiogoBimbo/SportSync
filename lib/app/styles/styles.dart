@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+// Títulos grandes: 28 a 32 pontos em Inter
+// Títulos médios: 20 a 24 pontos em Inter
+// Texto de conteúdo: 14 a 18 pontos em Inter
+// Texto pequeno (rodapé, legenda): 12 a 14 pontos em Inter
+
 class Styles {
   static const TextStyle adcAmigos = TextStyle(
     fontFamily: 'Inter',
@@ -27,8 +32,8 @@ class Styles {
 
   static const TextStyle titulo = TextStyle(
     fontFamily: 'Inter',
-    fontSize: 18,
-    fontWeight: FontWeight.w800,
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
   );
 
   static const TextStyle tituloBarra = TextStyle(
@@ -39,13 +44,13 @@ class Styles {
 
   static const TextStyle conteudo = TextStyle(
     fontFamily: 'Inter',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
   );
 
   static const TextStyle tag = TextStyle(
     fontFamily: 'Inter',
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
   );
 
