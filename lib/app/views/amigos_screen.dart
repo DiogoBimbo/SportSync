@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/adicionar_amigos_screen.dart';
 
 class AmigosScreen extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _AmigosScreenState extends State<AmigosScreen> {
                             Styles.corPrincipal),
                       ),
                       onPressed: () {
-                        _adicionarAmigo();
+                        adicionarAmigo();
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(12.0),
@@ -116,7 +117,7 @@ class _AmigosScreenState extends State<AmigosScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Styles.corPrincipal,
         onPressed: () {
-          _adicionarAmigo();
+          adicionarAmigo();
         },
         child: const Icon(
           Icons.group_add,
@@ -126,10 +127,13 @@ class _AmigosScreenState extends State<AmigosScreen> {
     );
   }
 
-  void _adicionarAmigo() {
+  // leva para a tela de adicionar amigos( adiciona o amigo na lista para teste )
+  void adicionarAmigo() {
     setState(() {
-      amigos.insert(0,
-          'Novo Amigo ${amigos.length + 1}'); // precisa levar para a página de adicionar amigo
+      amigos.insert(0, 'Novo Amigo ${amigos.length + 1}');
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const AdicionarAmigosScreen(),
+      ));
     });
   }
 
