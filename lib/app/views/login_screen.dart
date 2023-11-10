@@ -49,7 +49,7 @@ class LoginScreen extends StatelessWidget {
       body: Stack(
         children: [
           FlutterLogin(
-            logo: const AssetImage('assets/images/logo.jpg'),
+            logo: const AssetImage('assets/images/ss.png'),
             onLogin: _authUser,
             onSignup: _signupUser,
             onSubmitAnimationCompleted: () {

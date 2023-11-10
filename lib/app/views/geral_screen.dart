@@ -16,7 +16,12 @@ class GeralScreen extends StatelessWidget {
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Nome do App'), // Editar nome do app
+          title: const Text(
+            'SportSync',
+            style: TextStyle(
+              fontFamily: 'RussoOne', // Adiciona a fonte Russo One
+            ),
+          ), // Editar nome do app
           actions: [
             IconButton(
               icon: const CircleAvatar(
