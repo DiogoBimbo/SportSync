@@ -82,6 +82,9 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
               child: ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {
+                  String nomeDaPessoa = 'Nome ${index + 1}';
+                  bool pessoaJaAdicionada = pessoas.contains(nomeDaPessoa);
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: ListTile(
@@ -90,15 +93,23 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
                         backgroundImage:
                             NetworkImage('https://via.placeholder.com/150'),
                       ),
-                      title: const Text(
-                        'Nome da pessoa',
+                      title: Text(
+                        nomeDaPessoa,
                         style: Styles.textoDestacado,
                       ),
                       trailing: IconButton(
                         onPressed: () {
-                          adicionarNaLista('Nome da pessoa');
+                          setState(() {
+                            if (pessoaJaAdicionada) {
+                              removerDaLista(nomeDaPessoa);
+                            } else {
+                              adicionarNaLista(nomeDaPessoa);
+                            }
+                          });
                         },
-                        icon: const Icon(Icons.add),
+                        icon: Icon(
+                          pessoaJaAdicionada ? Icons.remove : Icons.add,
+                        ),
                       ),
                     ),
                   );
@@ -111,23 +122,30 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Styles.corPrincipal),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      // implementar a ação de adicionar os amigos no banco de dados
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(12.0),
+                    style: pessoas.isEmpty
+                        ? ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Styles.corPrincipal.withOpacity(0.5)),
+                          )
+                        : ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Styles.corPrincipal),
+                          ),
+                    onPressed: pessoas.isEmpty
+                        ? null
+                        : () {
+                            Navigator.of(context).pop();
+                            // implementar a ação de adicionar os amigos no banco de dados
+                          },
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
                       child: Text(
                         'Adicionar',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: pessoas.isEmpty ? Colors.grey : Colors.white,
                         ),
                       ),
                     ),

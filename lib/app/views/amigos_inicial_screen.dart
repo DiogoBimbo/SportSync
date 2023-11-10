@@ -83,6 +83,9 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
               child: ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) {
+                  String nomeDaPessoa = 'Nome ${index + 1}';
+                  bool pessoaJaAdicionada = pessoas.contains(nomeDaPessoa);
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
                     child: ListTile(
@@ -91,15 +94,23 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                         backgroundImage:
                             NetworkImage('https://via.placeholder.com/150'),
                       ),
-                      title: const Text(
-                        'Nome da pessoa',
+                      title: Text(
+                        nomeDaPessoa,
                         style: Styles.textoDestacado,
                       ),
                       trailing: IconButton(
                         onPressed: () {
-                          adicionarNaLista('Nome da pessoa');
+                          setState(() {
+                            if (pessoaJaAdicionada) {
+                              removerDaLista(nomeDaPessoa);
+                            } else {
+                              adicionarNaLista(nomeDaPessoa);
+                            }
+                          });
                         },
-                        icon: const Icon(Icons.add),
+                        icon: Icon(
+                          pessoaJaAdicionada ? Icons.remove : Icons.add,
+                        ),
                       ),
                     ),
                   );
