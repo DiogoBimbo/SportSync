@@ -19,7 +19,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
       appBar: AppBar(
         title: const Text(
           'Adicione amigos para começar :)',
-          style: Styles.adcAmigos,
+          style: Styles.tituloBarra,
         ),
       ),
       body: Padding(

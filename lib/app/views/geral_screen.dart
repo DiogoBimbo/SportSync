@@ -19,15 +19,15 @@ class GeralScreen extends StatelessWidget {
           title: const Text(
             'SportSync',
             style: TextStyle(
-              fontFamily: 'RussoOne', // Adiciona a fonte Russo One
+              fontFamily: 'RussoOne',
             ),
-          ), // Editar nome do app
+          ),
           actions: [
             IconButton(
               icon: const CircleAvatar(
-                  backgroundImage: AssetImage(
-                      'usuario.png') // Colocar a imagem do usuário integrado com backend
-                  ),
+                backgroundImage: NetworkImage(
+                    'https://via.placeholder.com/150'), // Colocar a imagem do usuário integrado com backend
+              ),
               onPressed: () {},
             ),
           ],

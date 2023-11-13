@@ -18,7 +18,7 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
       appBar: AppBar(
         title: const Text(
           'Adicione amigos',
-          style: Styles.adcAmigos,
+          style: Styles.tituloBarra,
         ),
       ),
       body: Padding(
