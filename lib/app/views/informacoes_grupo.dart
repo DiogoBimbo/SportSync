@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
 import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/editar_informacoes_grupo.dart';
 
 class InformacoesGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
@@ -24,6 +26,7 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
   TextEditingController pesquisaController = TextEditingController();
 
   get usuarioEhDono => widget.usuarioEhDono;
+  get nomeDoGrupo => widget.nomeDoGrupo;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,9 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
             IconButton(
               icon: const Icon(Icons.edit),
               onPressed: () {
-                // Implementar a ação do botão
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const EditarGrupoScreen(),
+                ));
               },
             ),
         ],
@@ -169,7 +174,7 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
             const SizedBox(height: 20.0),
             InkWell(
               onTap: () {
-                // Implementar a ação de sair do grupo
+                _desejaSairDoGrupo();
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -194,7 +199,7 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
                 padding: const EdgeInsets.only(top: 20.0),
                 child: InkWell(
                   onTap: () {
-                    // Implementar a ação de apagar o grupo
+                    _desejaApagarGrupo(nomeDoGrupo);
                   },
                   child: Center(
                     child: Column(
@@ -236,20 +241,82 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Remover do grupo',
-            style: Styles.titulo,
-          ),
+        return ConfirmDialog(
+            title: 'Remover do grupo',
+            content: RichText(
+              text: TextSpan(
+                style: Styles.texto,
+                children: <TextSpan>[
+                  const TextSpan(
+                    text: 'Deseja remover ',
+                  ),
+                  TextSpan(
+                    text: participante,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: ' do grupo?',
+                  ),
+                ],
+              ),
+            ),
+            confirmButtonText: 'Remover',
+            cancelButtonText: 'Cancelar',
+            onConfirm: () {
+              Navigator.of(context).pop();
+              removerDoGrupo(participante);
+            },
+            onCancel: () {
+              Navigator.of(context).pop();
+            },
+            customIcon: const Icon(Icons.person_remove));
+      },
+    );
+  }
+
+  void _desejaSairDoGrupo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmDialog(
+          title: 'Sair do grupo',
+          content: RichText(
+              text: const TextSpan(
+                  text: 'Você deseja sair do grupo?', style: Styles.texto)),
+          confirmButtonText: 'Sair',
+          cancelButtonText: 'Cancelar',
+          onConfirm: () {
+            // implementar a ação de sair do grupo
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+          customIcon: const Icon(Icons.exit_to_app),
+        );
+      },
+    );
+  }
+
+  void _desejaApagarGrupo(String nomeDoGrupo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ConfirmDialog(
+          title: 'Apagar grupo',
           content: RichText(
             text: TextSpan(
               style: Styles.texto,
               children: <TextSpan>[
                 const TextSpan(
-                  text: 'Deseja remover ',
+                  text: 'Deseja apagar o grupo: ',
                 ),
                 TextSpan(
-                  text: participante,
+                  text: nomeDoGrupo,
                   style: const TextStyle(
                     color: Colors.white,
                     fontFamily: 'Inter',
@@ -263,37 +330,15 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
               ],
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'Cancelar',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Inter',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                removerDoGrupo(participante);
-              },
-              child: Text(
-                'Remover',
-                style: TextStyle(
-                  color: Colors.red[400],
-                  fontFamily: 'Inter',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
+          confirmButtonText: 'Apagar',
+          cancelButtonText: 'Cancelar',
+          onConfirm: () {
+            // implementar a ação de apagar o grupo
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+          customIcon: const Icon(Icons.delete),
         );
       },
     );

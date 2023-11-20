@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
 import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/adicionar_amigos_screen.dart';
@@ -148,11 +149,8 @@ class _AmigosScreenState extends State<AmigosScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            'Desfazer amizade',
-            style: Styles.titulo,
-          ),
+        return ConfirmDialog(
+          title: 'Desfazer amizade',
           content: RichText(
             text: TextSpan(
               style: Styles.texto,
@@ -161,46 +159,30 @@ class _AmigosScreenState extends State<AmigosScreen> {
                   text: 'Deseja desfazer a amizade com ',
                 ),
                 TextSpan(
-                    text: amigo,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Inter',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    )),
+                  text: amigo,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
                 const TextSpan(
                   text: ' ?',
                 ),
               ],
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancelar',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                removerAmigo(amigo);
-              },
-              child: Text('Remover',
-                  style: TextStyle(
-                    color: Colors.red[400],
-                    fontFamily: 'Inter',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
-          ],
+          confirmButtonText: 'Desfazer',
+          cancelButtonText: 'Cancelar',
+          onConfirm: () {
+            Navigator.of(context).pop();
+            removerAmigo(amigo);
+          },
+          onCancel: () {
+            Navigator.of(context).pop();
+          },
+          customIcon: const Icon(Icons.person_remove),
         );
       },
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/styles/styles.dart';
-import 'package:pi_app/app/views/geral_screen.dart';
 
 class CriarGrupoDScreen extends StatefulWidget {
   const CriarGrupoDScreen({Key? key}) : super(key: key);
