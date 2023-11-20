@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/styles/styles.dart';
 
 class LocalScreen extends StatelessWidget {
@@ -6,32 +7,39 @@ class LocalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: TextField(
-            decoration: InputDecoration(
-              hintText: 'Pesquisar Locais',
-              prefixIcon: Icon(Icons.search),
+    return Scaffold(
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'LOCAIS RECOMENDADOS',
+                  style: Styles.titulo,
+                ),
+              ),
             ),
-          ),
+            BarraPesquisa(hintText: 'Pesquisar por locais...'),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 5, // Número de locais na lista
+                itemBuilder: (context, index) {
+                  return PlaceCard(
+                    imageUrl: 'https://pbs.twimg.com/media/FV9_kw-WYAAnZaG.jpg',
+                    priceTag: 'gratuito',
+                    placeName: 'Nome do Lugar',
+                    placeAddress: 'Endereço do Lugar',
+                    websiteLink: 'https://google.com.br',
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: 5, // Número de locais na lista
-            itemBuilder: (context, index) {
-              return PlaceCard(
-                imageUrl: 'https://pbs.twimg.com/media/FV9_kw-WYAAnZaG.jpg',
-                priceTag: 'gratuito',
-                placeName: 'Nome do Lugar',
-                placeAddress: 'Endereço do Lugar',
-                websiteLink: 'https://google.com.br',
-              );
-            },
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

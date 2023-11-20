@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:pi_app/app/views/amigos_screen.dart';
 import 'package:pi_app/app/views/grupos_screen.dart';
-=======
 import 'package:pi_app/app/views/local_screen.dart';
->>>>>>> othavio
 
 List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
 
@@ -20,17 +17,12 @@ class GeralScreen extends StatelessWidget {
       length: tabsCount,
       child: Scaffold(
         appBar: AppBar(
-<<<<<<< HEAD
-<<<<<<< HEAD
-          title: const Text('Nome do App'), // Editar nome do app
-=======
           title: const Text(
             'SportSync',
             style: TextStyle(
               fontFamily: 'RussoOne',
             ),
           ),
->>>>>>> Diogo
           actions: [
             IconButton(
               icon: const CircleAvatar(
@@ -40,20 +32,12 @@ class GeralScreen extends StatelessWidget {
               onPressed: () {},
             ),
           ],
-=======
-          title: const Text('AppBar Sample'),
-          notificationPredicate: (ScrollNotification notification) {
-            return notification.depth == 1;
-          },
-          scrolledUnderElevation: 4.0,
-          shadowColor: Theme.of(context).shadowColor,
->>>>>>> othavio
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: <Widget>[
-<<<<<<< HEAD
             GruposScreen(),
             AmigosScreen(),
+            LocalScreen(),
           ],
         ),
         bottomNavigationBar: Material(
@@ -98,34 +82,6 @@ class GeralScreen extends StatelessWidget {
                 ),
               ],
             ),
-=======
-            LocalScreen()
-          ],
-        ),
-        bottomNavigationBar: Container(
-          color: Theme.of(context)
-              .colorScheme
-              .surface, // Cor padrão do modo escuro
-          child: TabBar(
-            tabs: <Widget>[
-              Tab(
-                icon: const Icon(Icons.cloud_outlined),
-                text: titles[0],
-              ),
-              Tab(
-                icon: const Icon(Icons.beach_access_sharp),
-                text: titles[1],
-              ),
-              Tab(
-                icon: const Icon(Icons.brightness_5_sharp),
-                text: titles[2],
-              ),
-              Tab(
-                icon: const Icon(Icons.brightness_5_sharp),
-                text: titles[3],
-              ),
-            ],
->>>>>>> othavio
           ),
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/chat_screen.dart';
 import 'package:pi_app/app/views/informacoes_grupo.dart';
 
 class ChatGrupoScreen extends StatefulWidget {
@@ -75,35 +76,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton.icon(
-              onPressed: () {
-                // Implemente a ação do botão "Missões do grupo" aqui
-              },
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(
-                  Styles.corPrincipal,
-                ),
-              ),
-              icon: const Icon(
-                Icons.star,
-                color: Colors.white,
-              ),
-              label: const Text(
-                'Missões do grupo',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: ChatScreen(),
     );
   }
 }
