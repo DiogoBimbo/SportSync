@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/app/views/criar_grupo_detalhes.dart';
 
 class CriarGrupoPScreen extends StatefulWidget {
   const CriarGrupoPScreen({Key? key}) : super(key: key);
@@ -16,18 +18,20 @@ class _CriarGrupoPState extends State<CriarGrupoPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Novo Grupo',
-              style: Styles.tituloBarra, // alterar
+              style: Styles.tituloBarra,
             ),
-            SizedBox(height: 1.0),
+            const SizedBox(height: 1.0),
             Text(
-              'Adicionar participantes',
-              style: Styles.texto, // alterar
+              amigos.isEmpty
+                  ? 'Adicionar participantes'
+                  : '${amigos.length} participante${amigos.length != 1 ? 's' : ''} selecionado${amigos.length != 1 ? 's' : ''}',
+              style: Styles.conteudo,
             ),
           ],
         ),
@@ -136,7 +140,7 @@ class _CriarGrupoPState extends State<CriarGrupoPScreen> {
                           ],
                         ),
                         title: Text(
-                          nomeDoAmigo,
+                          limitarString(nomeDoAmigo, 25),
                           style: Styles.textoDestacado,
                         ),
                       ),
@@ -151,7 +155,10 @@ class _CriarGrupoPState extends State<CriarGrupoPScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Styles.corPrincipal,
         onPressed: () {
-          // implementar a ação de adicionar participantes ao grupo e ir para a próxima tela
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const CriarGrupoDScreen(),
+          ));
+          // implementar a ação de adicionar participantes ao grupo
         },
         child: const Icon(
           Icons.arrow_forward,

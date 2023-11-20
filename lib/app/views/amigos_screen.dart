@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/adicionar_amigos_screen.dart';
 
@@ -94,13 +95,13 @@ class _AmigosScreenState extends State<AmigosScreen> {
                                       'https://via.placeholder.com/150'), // imagem do amigo a ser obtida do banco de dados
                                 ),
                                 title: Text(
-                                  amigos[
-                                      index], // Nome do amigo a ser obtido do banco de dados
+                                  limitarString(amigos[index],
+                                      20), // Nome do amigo a ser obtido do banco de dados
                                   style: Styles.textoDestacado,
                                 ),
                                 trailing: IconButton(
                                   onPressed: () {
-                                    removerAmigo(amigos[index]);
+                                    _desejaRemoverAmigo(amigos[index]);
                                   },
                                   icon: const Icon(Icons.remove),
                                 ),
@@ -141,5 +142,67 @@ class _AmigosScreenState extends State<AmigosScreen> {
     setState(() {
       amigos.remove(amigo); // implementar a remoção do amigo do banco de dados
     });
+  }
+
+  void _desejaRemoverAmigo(String amigo) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Desfazer amizade',
+            style: Styles.titulo,
+          ),
+          content: RichText(
+            text: TextSpan(
+              style: Styles.texto,
+              children: <TextSpan>[
+                const TextSpan(
+                  text: 'Deseja desfazer a amizade com ',
+                ),
+                TextSpan(
+                    text: amigo,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    )),
+                const TextSpan(
+                  text: ' ?',
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  )),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                removerAmigo(amigo);
+              },
+              child: Text('Remover',
+                  style: TextStyle(
+                    color: Colors.red[400],
+                    fontFamily: 'Inter',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  )),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

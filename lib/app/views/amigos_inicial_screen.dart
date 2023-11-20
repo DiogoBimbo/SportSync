@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
@@ -95,7 +96,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                             NetworkImage('https://via.placeholder.com/150'),
                       ),
                       title: Text(
-                        nomeDaPessoa,
+                        limitarString(nomeDaPessoa, 25),
                         style: Styles.textoDestacado,
                       ),
                       trailing: IconButton(

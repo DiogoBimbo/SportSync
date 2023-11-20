@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/app/models/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/chat_grupo.dart';
 import 'package:pi_app/app/views/criar_grupo_participantes.dart';
 
 class GruposScreen extends StatefulWidget {
@@ -85,7 +87,14 @@ class _GruposScreenState extends State<GruposScreen> {
                             padding: const EdgeInsets.only(bottom: 12.0),
                             child: InkWell(
                               onTap: () {
-                                // Implemente a ação quando o grupo for clicado
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ChatGrupoScreen(
+                                      nomeDoGrupo:
+                                          'Nome do grupo', // implementar a obtenção do nome do grupo do banco de dados
+                                      imagemDoGrupo:
+                                          'https://via.placeholder.com/150' // implementar a obtenção da imagem do grupo do banco de dados
+                                      ),
+                                ));
                               },
                               child: ListTile(
                                 leading: const CircleAvatar(
@@ -94,8 +103,7 @@ class _GruposScreenState extends State<GruposScreen> {
                                       'https://via.placeholder.com/150'), // imagem do grupo a ser obtida do banco de dados
                                 ),
                                 title: Text(
-                                  grupos[
-                                      index], // Nome do grupo a ser obtido do banco de dados
+                                  limitarString(grupos[index], 28), // Nome do grupo a ser obtido do banco de dados
                                   style: Styles.textoDestacado,
                                 ),
                               ),

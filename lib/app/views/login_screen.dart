@@ -68,7 +68,7 @@ class LoginScreen extends StatelessWidget {
               confirmPasswordHint: 'Confirmar senha',
               loginButton: 'LOGIN',
               signupButton: 'CADASTRAR',
-              forgotPasswordButton: 'Equeci minha senha',
+              forgotPasswordButton: 'Esqueci minha senha',
               recoverPasswordButton: 'RECUPERAR',
               goBackButton: 'VOLTAR',
               confirmPasswordError: 'Não corresponde!',
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
             ),
             theme: LoginTheme(
               accentColor: Styles.corPrincipal,
-              errorColor: Colors.red,
+              errorColor: Colors.red[400],
               titleStyle: const TextStyle(
                 color: Colors.greenAccent,
                 fontFamily: 'Inter',
