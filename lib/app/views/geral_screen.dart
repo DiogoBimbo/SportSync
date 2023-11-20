@@ -21,13 +21,22 @@ class GeralScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
 <<<<<<< HEAD
+<<<<<<< HEAD
           title: const Text('Nome do App'), // Editar nome do app
+=======
+          title: const Text(
+            'SportSync',
+            style: TextStyle(
+              fontFamily: 'RussoOne',
+            ),
+          ),
+>>>>>>> Diogo
           actions: [
             IconButton(
               icon: const CircleAvatar(
-                  backgroundImage: AssetImage(
-                      'usuario.png') // Colocar a imagem do usuário integrado com backend
-                  ),
+                backgroundImage: NetworkImage(
+                    'https://via.placeholder.com/150'), // Colocar a imagem do usuário integrado com backend
+              ),
               onPressed: () {},
             ),
           ],

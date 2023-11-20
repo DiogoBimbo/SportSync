@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/models/funcoes.dart';
-import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 
-class AmigosInicialScreen extends StatefulWidget {
-  const AmigosInicialScreen({Key? key}) : super(key: key);
+class AdicionarAmigosScreen extends StatefulWidget {
+  const AdicionarAmigosScreen({Key? key}) : super(key: key);
 
   @override
-  _AmigosInicialState createState() => _AmigosInicialState();
+  _AdicionarAmigosState createState() => _AdicionarAmigosState();
 }
 
-class _AmigosInicialState extends State<AmigosInicialScreen> {
+class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
   List<String> pessoas = []; // Lista de amigos a ser obtida do banco de dados
 
   @override
@@ -19,7 +18,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Adicione amigos para começar :)',
+          'Adicione amigos',
           style: Styles.tituloBarra,
         ),
       ),
@@ -124,25 +123,30 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Styles.corPrincipal),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const GeralScreen(),
-                      ));
-                      // implementar a ação de adicionar os amigos no banco de dados
-                    },
-                    child: const Padding(
-                      padding: EdgeInsets.all(12.0),
+                    style: pessoas.isEmpty
+                        ? ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Styles.corPrincipal.withOpacity(0.5)),
+                          )
+                        : ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Styles.corPrincipal),
+                          ),
+                    onPressed: pessoas.isEmpty
+                        ? null
+                        : () {
+                            Navigator.of(context).pop();
+                            // implementar a ação de adicionar os amigos no banco de dados
+                          },
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        'Avançar',
+                        'Adicionar',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: pessoas.isEmpty ? Colors.grey : Colors.white,
                         ),
                       ),
                     ),
