@@ -77,7 +77,7 @@ class GeralScreen extends StatelessWidget {
                   text: titles[2],
                 ),
                 Tab(
-                  icon: const Icon(Icons.assignment),
+                  icon: const Icon(Icons.star),
                   text: titles[3],
                 ),
               ],

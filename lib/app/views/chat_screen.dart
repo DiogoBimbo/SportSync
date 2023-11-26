@@ -10,16 +10,25 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-
   List<types.Message> _messages = [];
   final _user = const types.User(
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
   );
 
   @override
-  Widget build (BuildContext context) {
-    return Scaffold(
-      body: Chat(messages: _messages, onSendPressed: _handleSendPressed, user: _user),
+  Widget build(BuildContext context) {
+    return Chat(
+      l10n: const ChatL10nEn(
+        inputPlaceholder: 'Mensagem',
+      ),
+      theme: const DarkChatTheme(
+        // customizar o resto do tema do chat
+        inputBorderRadius: BorderRadius.all(Radius.circular(10)),
+        inputMargin: EdgeInsets.only(left: 6, right: 6, bottom: 6),
+      ),
+      messages: _messages,
+      onSendPressed: _handleSendPressed,
+      user: _user,
     );
   }
 
