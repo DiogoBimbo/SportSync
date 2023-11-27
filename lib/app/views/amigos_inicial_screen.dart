@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pi_app/app/models/funcoes.dart';
+import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';

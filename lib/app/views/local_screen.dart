@@ -9,7 +9,7 @@ class LocalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           children: [
             const Padding(
@@ -22,12 +22,12 @@ class LocalScreen extends StatelessWidget {
                 ),
               ),
             ),
-            BarraPesquisa(hintText: 'Pesquisar por locais...'),
+            const BarraPesquisa(hintText: 'Pesquisar por locais...'),
             Expanded(
               child: ListView.builder(
                 itemCount: 5, // Número de locais na lista
                 itemBuilder: (context, index) {
-                  return PlaceCard(
+                  return const PlaceCard(
                     imageUrl: 'https://pbs.twimg.com/media/FV9_kw-WYAAnZaG.jpg',
                     priceTag: 'gratuito',
                     placeName: 'Nome do Lugar',
@@ -52,7 +52,7 @@ class PlaceCard extends StatelessWidget {
   final String websiteLink;
   
 
-  PlaceCard({
+  const PlaceCard({super.key, 
     required this.imageUrl,
     required this.priceTag,
     required this.placeName,
@@ -63,11 +63,11 @@ class PlaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(16.0),
+      margin: const EdgeInsets.all(16.0),
       child: Row(
         children: [
           // Coluna esquerda com a imagem (1/3)
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width / 3, // 1/3 da largura da tela
             child: Image.network(imageUrl, fit: BoxFit.cover),
           ),
@@ -110,7 +110,7 @@ class PlaceCard extends StatelessWidget {
                       // Adicione a ação desejada ao pressionar o link
                       // Por exemplo, abrir um navegador com o link
                     },
-                    child: Text(
+                    child: const Text(
                       'Website',
                       style: TextStyle(color: Colors.blue),
                     ),

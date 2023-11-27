@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
-import 'package:pi_app/app/models/funcoes.dart';
+import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/editar_informacoes_grupo.dart';
 
@@ -10,7 +10,7 @@ class InformacoesGrupoScreen extends StatefulWidget {
   final String imagemDoGrupo;
   final bool usuarioEhDono;
 
-  InformacoesGrupoScreen({
+  const InformacoesGrupoScreen({super.key, 
     required this.nomeDoGrupo,
     required this.imagemDoGrupo,
     required this.usuarioEhDono,

@@ -49,19 +49,25 @@ class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
                               )
                             : null,
                       ),
-                      child: InkWell(
-                        onTap: () {
-                          // Implementar a lógica para escolher uma imagem
-                          // Pode abrir um seletor de imagem ou câmera
-                        },
-                        child: Center(
-                          child: imagemDoGrupo == null
-                              ? Icon(
-                                  Icons.camera_alt,
-                                  size: 30,
-                                  color: Colors.grey[300],
-                                )
-                              : null,
+                      child: ClipOval(
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: () {
+                              // Implementar a lógica para escolher uma imagem
+                              // Pode abrir um seletor de imagem ou câmera
+                            },
+                            child: Center(
+                              child: imagemDoGrupo == null
+                                  ? Icon(
+                                      Icons.camera_alt,
+                                      size: 30,
+                                      color: Colors.grey[300],
+                                    )
+                                  : null,
+                            ),
+                          ),
                         ),
                       ),
                     ),

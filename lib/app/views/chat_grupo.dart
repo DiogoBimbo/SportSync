@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pi_app/app/models/funcoes.dart';
+import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/chat_screen.dart';
 import 'package:pi_app/app/views/informacoes_grupo.dart';
@@ -8,7 +8,7 @@ class ChatGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
   final String imagemDoGrupo;
 
-  ChatGrupoScreen({required this.nomeDoGrupo, required this.imagemDoGrupo});
+  const ChatGrupoScreen({super.key, required this.nomeDoGrupo, required this.imagemDoGrupo});
 
   @override
   _ChatGrupoScreenState createState() => _ChatGrupoScreenState();
@@ -19,14 +19,14 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Container(
+        title: SizedBox(
           height: kToolbarHeight,
           child: InkWell(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => InformacoesGrupoScreen(
+                  builder: (context) => const InformacoesGrupoScreen(
                       usuarioEhDono:
                           true, // implementar a obtenção do status de dono do grupo do banco de dados
                       nomeDoGrupo:
@@ -66,7 +66,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => InformacoesGrupoScreen(
+                  builder: (context) => const InformacoesGrupoScreen(
                       usuarioEhDono:
                           true, // implementar a obtenção do status de dono do grupo do banco de dados
                       nomeDoGrupo:
@@ -82,7 +82,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
       ),
       body: Stack(
         children: [
-          ChatScreen(),
+          const ChatScreen(),
           Positioned(
             top: 0,
             left: 0,

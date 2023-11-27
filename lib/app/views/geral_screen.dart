@@ -33,7 +33,7 @@ class GeralScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: <Widget>[
             GruposScreen(),
             AmigosScreen(),

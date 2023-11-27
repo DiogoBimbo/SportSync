@@ -10,7 +10,7 @@ class ConfirmDialog extends StatelessWidget {
   final VoidCallback onCancel;
   final Icon customIcon;
 
-  ConfirmDialog({
+  const ConfirmDialog({super.key, 
     required this.title,
     required this.content,
     required this.confirmButtonText,

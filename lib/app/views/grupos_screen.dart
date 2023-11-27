@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
-import 'package:pi_app/app/models/funcoes.dart';
+import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/chat_grupo.dart';
 import 'package:pi_app/app/views/criar_grupo_participantes.dart';
 
 class GruposScreen extends StatefulWidget {
+  const GruposScreen({super.key});
+
   @override
   _GruposScreenState createState() => _GruposScreenState();
 }
@@ -88,7 +90,7 @@ class _GruposScreenState extends State<GruposScreen> {
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ChatGrupoScreen(
+                                  builder: (context) => const ChatGrupoScreen(
                                       nomeDoGrupo:
                                           'Nome do grupo', // implementar a obtenção do nome do grupo do banco de dados
                                       imagemDoGrupo:
