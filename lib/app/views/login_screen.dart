@@ -49,7 +49,7 @@ class LoginScreen extends StatelessWidget {
       body: Stack(
         children: [
           FlutterLogin(
-            logo: const AssetImage('assets/images/logo.jpg'),
+            logo: const AssetImage('assets/images/ss.png'),
             onLogin: _authUser,
             onSignup: _signupUser,
             onSubmitAnimationCompleted: () {
@@ -68,7 +68,7 @@ class LoginScreen extends StatelessWidget {
               confirmPasswordHint: 'Confirmar senha',
               loginButton: 'LOGIN',
               signupButton: 'CADASTRAR',
-              forgotPasswordButton: 'Equeci minha senha',
+              forgotPasswordButton: 'Esqueci minha senha',
               recoverPasswordButton: 'RECUPERAR',
               goBackButton: 'VOLTAR',
               confirmPasswordError: 'Não corresponde!',
@@ -79,7 +79,7 @@ class LoginScreen extends StatelessWidget {
             ),
             theme: LoginTheme(
               accentColor: Styles.corPrincipal,
-              errorColor: Colors.red,
+              errorColor: Colors.red[400],
               titleStyle: const TextStyle(
                 color: Colors.greenAccent,
                 fontFamily: 'Inter',
@@ -97,9 +97,6 @@ class LoginScreen extends StatelessWidget {
               buttonTheme: const LoginButtonTheme(
                 backgroundColor: Styles.corPrincipal,
               ),
-              // buttonStyle: const TextStyle(
-              //   fontWeight: FontWeight.bold,
-              // ),
               inputTheme: InputDecorationTheme(
                 labelStyle: const TextStyle(
                   fontFamily: 'Inter',

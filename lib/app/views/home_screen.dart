@@ -27,13 +27,10 @@ class HomePage extends StatelessWidget {
                 // Logo
                 Align(
                   alignment: Alignment.topCenter,
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/logo.jpg',
-                      width: 150.0,
-                      height: 150.0,
-                      fit: BoxFit.cover,
-                    ),
+                  child: Image.asset(
+                    'assets/images/ss.png',
+                    width: 150.0,
+                    height: 150.0,
                   ),
                 ),
                 // Frase de efeito e botões

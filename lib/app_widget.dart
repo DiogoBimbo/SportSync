@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pi_app/app/views/home_screen.dart';
 
 class AppWidget extends StatelessWidget {
@@ -21,6 +22,12 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
         title: 'PI App',
         theme: ThemeData(
+          textTheme: GoogleFonts.interTextTheme(
+            Theme.of(context).textTheme,
+          ).apply(
+            bodyColor: Colors.white,
+            displayColor: Colors.white,
+          ),
           primarySwatch: customWhiteColor,
           brightness: Brightness.dark,
         ),
