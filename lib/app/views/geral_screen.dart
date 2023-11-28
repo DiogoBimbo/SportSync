@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/views/amigos_screen.dart';
 import 'package:pi_app/app/views/grupos_screen.dart';
 import 'package:pi_app/app/views/local_screen.dart';
+import 'package:pi_app/app/views/minha_conta.dart';
 
 List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
 
@@ -29,7 +30,12 @@ class GeralScreen extends StatelessWidget {
                 backgroundImage: NetworkImage(
                     'https://via.placeholder.com/150'), // Colocar a imagem do usuário integrado com backend
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MinhaContaScreen()),
+                );
+              },
             ),
           ],
         ),

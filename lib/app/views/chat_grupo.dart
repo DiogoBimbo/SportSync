@@ -8,7 +8,8 @@ class ChatGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
   final String imagemDoGrupo;
 
-  const ChatGrupoScreen({super.key, required this.nomeDoGrupo, required this.imagemDoGrupo});
+  const ChatGrupoScreen(
+      {super.key, required this.nomeDoGrupo, required this.imagemDoGrupo});
 
   @override
   _ChatGrupoScreenState createState() => _ChatGrupoScreenState();

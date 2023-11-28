@@ -3,6 +3,7 @@ import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/conta_amigo.dart';
 import 'package:pi_app/app/views/editar_informacoes_grupo.dart';
 
 class InformacoesGrupoScreen extends StatefulWidget {
@@ -10,7 +11,8 @@ class InformacoesGrupoScreen extends StatefulWidget {
   final String imagemDoGrupo;
   final bool usuarioEhDono;
 
-  const InformacoesGrupoScreen({super.key, 
+  const InformacoesGrupoScreen({
+    super.key,
     required this.nomeDoGrupo,
     required this.imagemDoGrupo,
     required this.usuarioEhDono,
@@ -147,83 +149,99 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
 
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        radius: 22,
-                        backgroundImage: NetworkImage(
-                          'https://via.placeholder.com/150', // Substitua pela imagem real
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AmigoContaScreen(
+                              nomeAmigo: nomeParticipante,
+                              imagemDoAmigo:
+                                  'https://via.placeholder.com/150', // Substitua pela imagem real
+                              eloDoAmigo: 'Diamante',
+                              missoesCumpridas: 100,
+                              missoesFaceis: 50,
+                              missoesMedias: 30,
+                              missoesDificeis: 20,
+                            ),
+                          ),
+                        );
+                      },
+                      child: ListTile(
+                        leading: const CircleAvatar(
+                          radius: 22,
+                          backgroundImage: NetworkImage(
+                            'https://via.placeholder.com/150', // Substitua pela imagem real
+                          ),
                         ),
+                        title: Text(
+                          nomeParticipante,
+                          style: Styles.textoDestacado,
+                        ),
+                        trailing: usuarioEhDono
+                            ? IconButton(
+                                icon: const Icon(Icons.remove),
+                                onPressed: () {
+                                  _desejaRemoverDoGrupo(
+                                      participantes[index - 1]);
+                                },
+                              )
+                            : null,
                       ),
-                      title: Text(
-                        nomeParticipante,
-                        style: Styles.textoDestacado,
-                      ),
-                      trailing: usuarioEhDono
-                          ? IconButton(
-                              icon: const Icon(Icons.remove),
-                              onPressed: () {
-                                _desejaRemoverDoGrupo(participantes[index - 1]);
-                              },
-                            )
-                          : null,
                     ),
                   );
                 },
               ),
             ),
             const SizedBox(height: 20.0),
-            InkWell(
-              onTap: () {
-                _desejaSairDoGrupo();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.exit_to_app,
-                    color: Colors.red[400],
-                  ),
-                  const SizedBox(width: 10),
-                  Text('Sair do Grupo',
-                      style: TextStyle(
-                        color: Colors.red[400],
-                        fontFamily: 'Inter',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400,
-                      )),
-                ],
-              ),
-            ),
-            if (usuarioEhDono)
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: InkWell(
-                  onTap: () {
-                    _desejaApagarGrupo(nomeDoGrupo);
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    _desejaSairDoGrupo();
                   },
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.delete, color: Colors.red[400]),
-                            const SizedBox(width: 10),
-                            Text('Apagar Grupo',
-                                style: TextStyle(
-                                  color: Colors.red[400],
-                                  fontFamily: 'Inter',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w400,
-                                )),
-                          ],
-                        ),
-                      ],
-                    ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.exit_to_app,
+                        color: Colors.red[400],
+                      ),
+                      const SizedBox(width: 10),
+                      Text('Sair do Grupo',
+                          style: TextStyle(
+                            color: Colors.red[400],
+                            fontFamily: 'Inter',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                          )),
+                    ],
                   ),
                 ),
-              ),
+                if (usuarioEhDono)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2.0, left: 20.0),
+                    child: TextButton(
+                      onPressed: () {
+                        _desejaApagarGrupo(nomeDoGrupo);
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.red[400]),
+                          const SizedBox(width: 10),
+                          Text('Apagar Grupo',
+                              style: TextStyle(
+                                color: Colors.red[400],
+                                fontFamily: 'Inter',
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
