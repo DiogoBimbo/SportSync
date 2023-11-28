@@ -31,6 +31,12 @@ class Styles {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle textoMaior = TextStyle(
+    fontFamily: 'Inter',
+    fontSize: 18,
+    fontWeight: FontWeight.w400,
+  );
+
   static const TextStyle conteudo = TextStyle(
     fontFamily: 'Inter',
     fontSize: 13,
@@ -43,12 +49,9 @@ class Styles {
     fontWeight: FontWeight.w400,
   );
 
-  static const TextStyle link = TextStyle(
-    fontFamily: 'Inter',
-    fontSize: 15,
-    fontWeight: FontWeight.w400,
-  );
-
   static const Color corPrincipal = Color.fromARGB(255, 52, 39, 194);
+  static const Color corFacil = Color.fromARGB(255, 71, 173, 166);
+  static const Color corMedio = Color.fromARGB(255, 62, 121, 185);
+  static const Color corDificil = Color.fromARGB(255, 130, 54, 196);
   static const inputBorderLogin = BorderRadius.all(Radius.circular(50));
 }

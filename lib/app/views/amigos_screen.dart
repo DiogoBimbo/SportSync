@@ -4,6 +4,7 @@ import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/adicionar_amigos_screen.dart';
+import 'package:pi_app/app/views/conta_amigo.dart';
 
 class AmigosScreen extends StatefulWidget {
   const AmigosScreen({super.key});
@@ -89,7 +90,21 @@ class _AmigosScreenState extends State<AmigosScreen> {
                             padding: const EdgeInsets.only(bottom: 12.0),
                             child: InkWell(
                               onTap: () {
-                                // Implemente a ação quando o amigo for clicado
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AmigoContaScreen(
+                                      nomeAmigo: amigos[index],
+                                      imagemDoAmigo:
+                                          'https://via.placeholder.com/150',
+                                      eloDoAmigo: 'Bronze',
+                                      missoesCumpridas: 10,
+                                      missoesFaceis: 5,
+                                      missoesMedias: 3,
+                                      missoesDificeis: 2,
+                                    ),
+                                  ),
+                                );
                               },
                               child: ListTile(
                                 leading: const CircleAvatar(
