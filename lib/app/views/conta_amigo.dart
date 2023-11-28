@@ -44,6 +44,7 @@ class AmigoContaScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey[700],
+                    // ignore: unnecessary_null_comparison
                     image: imagemDoAmigo != null
                         ? DecorationImage(
                             image: NetworkImage(imagemDoAmigo),
@@ -54,7 +55,7 @@ class AmigoContaScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 15.0),
-              // Nome do amigo 
+              // Nome do amigo
               Center(
                 child: Text(
                   nomeAmigo,

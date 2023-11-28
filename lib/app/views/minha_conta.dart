@@ -51,6 +51,7 @@ class _MinhaContaScreenState extends State<MinhaContaScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.grey[700],
+                      // ignore: unnecessary_null_comparison
                       image: imagemDoUsuario != null
                           ? DecorationImage(
                               image: NetworkImage(imagemDoUsuario),
@@ -489,10 +490,10 @@ class _MinhaContaScreenState extends State<MinhaContaScreen> {
                       ),
                     ),
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.all(12.0), // Padding interno de 12
+                      padding:
+                          const EdgeInsets.all(12.0), // Padding interno de 12
                       side: const BorderSide(
-                          color: Color.fromRGBO(239, 83, 80, 1),
-                          width: 2),
+                          color: Color.fromRGBO(239, 83, 80, 1), width: 2),
                     ),
                   )
                 ],
