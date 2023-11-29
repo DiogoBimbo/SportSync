@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
-import 'package:pi_app/app/views/criar_grupo_detalhes.dart';
+import 'package:pi_app/app/views/criar_grupo_detalhes_screen.dart';
 
 class CriarGrupoPScreen extends StatefulWidget {
   const CriarGrupoPScreen({Key? key}) : super(key: key);

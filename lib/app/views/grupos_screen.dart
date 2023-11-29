@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
-import 'package:pi_app/app/views/chat_grupo.dart';
-import 'package:pi_app/app/views/criar_grupo_participantes.dart';
+import 'package:pi_app/app/views/chat_grupo_screen.dart';
+import 'package:pi_app/app/views/criar_grupo_participantes_screen.dart';
 
 class GruposScreen extends StatefulWidget {
   const GruposScreen({super.key});
@@ -105,7 +105,8 @@ class _GruposScreenState extends State<GruposScreen> {
                                       'https://via.placeholder.com/150'), // imagem do grupo a ser obtida do banco de dados
                                 ),
                                 title: Text(
-                                  limitarString(grupos[index], 28), // Nome do grupo a ser obtido do banco de dados
+                                  limitarString(grupos[index],
+                                      28), // Nome do grupo a ser obtido do banco de dados
                                   style: Styles.textoDestacado,
                                 ),
                               ),

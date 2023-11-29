@@ -23,10 +23,10 @@ class _ChatScreenState extends State<ChatScreen> {
         inputPlaceholder: 'Mensagem',
       ),
       theme: const DarkChatTheme(
-        primaryColor: Color.fromARGB(174, 52, 39, 194),
-        secondaryColor: Color(0x44444444),
-        backgroundColor: Color(0xFF2E2E2E), 
-        inputBackgroundColor: Color(0x44444444),
+        primaryColor: Color.fromARGB(197, 52, 39, 194),
+        secondaryColor: Color.fromARGB(255, 68, 68, 68),
+        backgroundColor: Color.fromARGB(255, 46, 46, 46), 
+        inputBackgroundColor: Color.fromARGB(255, 68, 68, 68),
         inputTextStyle: TextStyle(fontFamily: 'Inter'),
         // customizar o resto do tema do chat
         inputBorderRadius: BorderRadius.all(Radius.circular(10)),

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/chat_screen.dart';
-import 'package:pi_app/app/views/informacoes_grupo.dart';
+import 'package:pi_app/app/views/informacoes_grupo_screen.dart';
+import 'package:pi_app/app/views/missoes_grupo_screen.dart';
 
 class ChatGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
@@ -95,7 +96,12 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
                   backgroundColor: Styles.corPrincipal, // corPrincipal
                 ),
                 onPressed: () {
-                  // Implemente a ação do botão aqui
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MissoesGrupoScreen(),
+                    ),
+                  );
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0),

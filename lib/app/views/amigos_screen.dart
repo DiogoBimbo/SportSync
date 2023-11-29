@@ -4,7 +4,7 @@ import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/adicionar_amigos_screen.dart';
-import 'package:pi_app/app/views/conta_amigo.dart';
+import 'package:pi_app/app/views/conta_amigo_screen.dart';
 
 class AmigosScreen extends StatefulWidget {
   const AmigosScreen({super.key});

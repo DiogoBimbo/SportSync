@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/views/amigos_screen.dart';
 import 'package:pi_app/app/views/grupos_screen.dart';
 import 'package:pi_app/app/views/local_screen.dart';
-import 'package:pi_app/app/views/minha_conta.dart';
+import 'package:pi_app/app/views/minha_conta_screen.dart';
 
 List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
 

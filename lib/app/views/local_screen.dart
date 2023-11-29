@@ -29,7 +29,8 @@ class LocalScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return const PlaceCard(
                     // imageUrl: 'https://pbs.twimg.com/media/FV9_kw-WYAAnZaG.jpg',
-                    imageUrl: 'https://meulugar.quintoandar.com.br/wp-content/uploads/2023/08/o-que-fazer-no-parque-ibirapuera.jpeg',
+                    imageUrl:
+                        'https://meulugar.quintoandar.com.br/wp-content/uploads/2023/08/o-que-fazer-no-parque-ibirapuera.jpeg',
                     priceTag: 'gratuito',
                     placeName: 'Nome do Lugar',
                     placeAddress: 'Endereço do Lugar',
@@ -51,9 +52,9 @@ class PlaceCard extends StatelessWidget {
   final String placeName;
   final String placeAddress;
   final String websiteLink;
-  
 
-  const PlaceCard({super.key, 
+  const PlaceCard({
+    super.key,
     required this.imageUrl,
     required this.priceTag,
     required this.placeName,
@@ -69,7 +70,8 @@ class PlaceCard extends StatelessWidget {
         children: [
           // Coluna esquerda com a imagem (1/3)
           SizedBox(
-            width: MediaQuery.of(context).size.width / 3, // 1/3 da largura da tela
+            width:
+                MediaQuery.of(context).size.width / 3, // 1/3 da largura da tela
             height: MediaQuery.of(context).size.width / 2,
             child: Image.network(imageUrl, fit: BoxFit.cover),
           ),
@@ -79,12 +81,15 @@ class PlaceCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 4.0, horizontal: 8.0),
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: const Color(0xFF3427C2)),
-                      color: const Color(0xFF3427C2), // Cor de fundo da tag de preço
-                      borderRadius: BorderRadius.circular(5.0), // Bordas arredondadas
+                      color: const Color(
+                          0xFF3427C2), // Cor de fundo da tag de preço
+                      borderRadius:
+                          BorderRadius.circular(5.0), // Bordas arredondadas
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0), // Espaçamento interno
@@ -97,7 +102,8 @@ class PlaceCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(placeName,
+                  child: Text(
+                    placeName,
                     style: Styles.titulo,
                   ),
                 ),
@@ -106,27 +112,29 @@ class PlaceCard extends StatelessWidget {
                   child: Text(placeAddress),
                 ),
                 Padding(
-  padding: const EdgeInsets.all(0),
-  child: TextButton(
-    onPressed: () {
-      // Adicione a ação desejada ao pressionar o link
-      // Por exemplo, abrir um navegador com o link
-    },
-    child: Row(
-      children: [
-        Icon(
-          Icons.location_on, // Ícone de localização (pode ser ajustado para o ícone desejado)
-          color: Color.fromARGB(255, 124, 112, 255), // Cor do ícone
-        ),
-        const SizedBox(width: 8), // Espaçamento entre o ícone e o texto
-        const Text(
-          'Localização',
-          style: TextStyle(color: Color.fromARGB(255, 124, 112, 255)),
-        ),
-      ],
-    ),
-  ),
-),
+                  padding: const EdgeInsets.all(0),
+                  child: TextButton(
+                    onPressed: () {
+                      // Adicione a ação desejada ao pressionar o link
+                      // Por exemplo, abrir um navegador com o link
+                    },
+                    child: const Row(
+                      children: [
+                        Icon(
+                          Icons
+                              .location_on, // Ícone de localização (pode ser ajustado para o ícone desejado)
+                          color: Styles.corLink, // Cor do ícone
+                        ),
+                        SizedBox(
+                            width: 8), // Espaçamento entre o ícone e o texto
+                        Text(
+                          'Localização',
+                          style: TextStyle(color: Styles.corLink),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

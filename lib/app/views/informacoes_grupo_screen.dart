@@ -3,8 +3,8 @@ import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/components/notificacao_de_verificacao.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
-import 'package:pi_app/app/views/conta_amigo.dart';
-import 'package:pi_app/app/views/editar_informacoes_grupo.dart';
+import 'package:pi_app/app/views/conta_amigo_screen.dart';
+import 'package:pi_app/app/views/editar_informacoes_grupo_screen.dart';
 
 class InformacoesGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
