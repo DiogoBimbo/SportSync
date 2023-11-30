@@ -62,66 +62,68 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
             ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '${participantes.length} participantes',
-              style: Styles.texto,
-            ),
-            if (usuarioEhDono)
-              Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          // Implementar a ação de adicionar participantes ir para a tela de adicionar participantes
-                        },
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: 45,
-                              width: 45,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Implementar a ação de adicionar participantes ir para a tela de adicionar participantes
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  padding: const EdgeInsets.all(0),
-                                  backgroundColor: Styles.corPrincipal,
-                                ),
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${participantes.length} participantes',
+                style: Styles.texto,
+              ),
+              if (usuarioEhDono)
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            // Implementar a ação de adicionar participantes ir para a tela de adicionar participantes
+                          },
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 45,
+                                width: 45,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // Implementar a ação de adicionar participantes ir para a tela de adicionar participantes
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const CircleBorder(),
+                                    padding: const EdgeInsets.all(0),
+                                    backgroundColor: Styles.corPrincipal,
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 10.0),
-                            const Text(
-                              'Adicionar participantes',
-                              style: Styles.textoDestacado,
-                            ),
-                          ],
+                              const SizedBox(width: 10.0),
+                              const Text(
+                                'Adicionar participantes',
+                                style: Styles.textoDestacado,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+              const SizedBox(height: 20.0),
+              const BarraPesquisa(
+                hintText: 'Pesquisar por participantes...',
               ),
-            const SizedBox(height: 20.0),
-            const BarraPesquisa(
-              hintText: 'Pesquisar por participantes...',
-            ),
-            const SizedBox(height: 20.0),
-            Expanded(
-              child: ListView.builder(
+              const SizedBox(height: 20.0),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: participantes.length,
                 itemBuilder: (context, index) {
                   if (index == 0) {
@@ -192,57 +194,56 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
                   );
                 },
               ),
-            ),
-            const SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    _desejaSairDoGrupo();
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.exit_to_app,
-                        color: Colors.red[400],
-                      ),
-                      const SizedBox(width: 10),
-                      Text('Sair do Grupo',
-                          style: TextStyle(
-                            color: Colors.red[400],
-                            fontFamily: 'Inter',
-                            fontSize: 15,
-                            fontWeight: FontWeight.w400,
-                          )),
-                    ],
-                  ),
-                ),
-                if (usuarioEhDono)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2.0, left: 20.0),
-                    child: TextButton(
-                      onPressed: () {
-                        _desejaApagarGrupo(nomeDoGrupo);
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete, color: Colors.red[400]),
-                          const SizedBox(width: 10),
-                          Text('Apagar Grupo',
-                              style: TextStyle(
-                                color: Colors.red[400],
-                                fontFamily: 'Inter',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                              )),
-                        ],
-                      ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _desejaSairDoGrupo();
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.exit_to_app,
+                          color: Colors.red[400],
+                        ),
+                        const SizedBox(width: 10),
+                        Text('Sair do Grupo',
+                            style: TextStyle(
+                              color: Colors.red[400],
+                              fontFamily: 'Inter',
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                            )),
+                      ],
                     ),
                   ),
-              ],
-            ),
-          ],
+                  if (usuarioEhDono)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 2.0, left: 20.0),
+                      child: TextButton(
+                        onPressed: () {
+                          _desejaApagarGrupo(nomeDoGrupo);
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.red[400]),
+                            const SizedBox(width: 10),
+                            Text('Apagar Grupo',
+                                style: TextStyle(
+                                  color: Colors.red[400],
+                                  fontFamily: 'Inter',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                )),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -271,11 +272,11 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
                   TextSpan(
                     text: participante,
                     style: const TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Inter',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+                        color: Colors.white,
+                        fontFamily: 'Inter',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        height: 1.5),
                   ),
                   const TextSpan(
                     text: ' do grupo?',
@@ -336,11 +337,11 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
                 TextSpan(
                   text: nomeDoGrupo,
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      height: 1.5),
                 ),
                 const TextSpan(
                   text: ' ?',

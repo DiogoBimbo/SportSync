@@ -63,27 +63,30 @@ class _GruposScreenState extends State<GruposScreen> {
                   ],
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'MEUS GRUPOS',
-                          style: Styles.titulo,
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'MEUS GRUPOS',
+                            style: Styles.tituloForte,
+                          ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 20.0),
-                      child: BarraPesquisa(hintText: 'Pesquisar por grupos...'),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 20.0),
+                        child:
+                            BarraPesquisa(hintText: 'Pesquisar por grupos...'),
+                      ),
+                      ListView.builder(
                         itemCount: grupos.length,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12.0),
@@ -114,8 +117,8 @@ class _GruposScreenState extends State<GruposScreen> {
                           );
                         },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
       ),

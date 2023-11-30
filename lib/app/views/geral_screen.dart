@@ -3,6 +3,7 @@ import 'package:pi_app/app/views/amigos_screen.dart';
 import 'package:pi_app/app/views/grupos_screen.dart';
 import 'package:pi_app/app/views/local_screen.dart';
 import 'package:pi_app/app/views/minha_conta_screen.dart';
+import 'package:pi_app/app/views/missoes_greal_screen.dart';
 
 List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
 
@@ -33,7 +34,8 @@ class GeralScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MinhaContaScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const MinhaContaScreen()),
                 );
               },
             ),
@@ -44,6 +46,7 @@ class GeralScreen extends StatelessWidget {
             GruposScreen(),
             AmigosScreen(),
             LocalScreen(),
+            MissoesGeralScreen()
           ],
         ),
         bottomNavigationBar: Material(

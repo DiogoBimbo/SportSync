@@ -9,8 +9,10 @@ class ConfirmDialog extends StatelessWidget {
   final VoidCallback onConfirm;
   final VoidCallback onCancel;
   final Icon customIcon;
+  final Color confirmButtonColor;
 
-  const ConfirmDialog({super.key, 
+  const ConfirmDialog({
+    super.key,
     required this.title,
     required this.content,
     required this.confirmButtonText,
@@ -18,6 +20,8 @@ class ConfirmDialog extends StatelessWidget {
     required this.onConfirm,
     required this.onCancel,
     required this.customIcon,
+    this.confirmButtonColor =
+        const Color.fromARGB(0, 239, 83, 80), // Cor padrão
   });
 
   @override
@@ -49,14 +53,16 @@ class ConfirmDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: onConfirm,
+          style: TextButton.styleFrom(
+            backgroundColor: confirmButtonColor,
+          ),
           child: Text(
             confirmButtonText,
-            style: TextStyle(
-              color: Colors.red[400],
-              fontFamily: 'Inter',
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Color.fromARGB(255, 239, 83, 80)),
           ),
         ),
       ],

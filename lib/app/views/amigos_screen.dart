@@ -5,6 +5,7 @@ import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/adicionar_amigos_screen.dart';
 import 'package:pi_app/app/views/conta_amigo_screen.dart';
+import 'package:pi_app/app/views/solicitacao_amizade_screen.dart';
 
 class AmigosScreen extends StatefulWidget {
   const AmigosScreen({super.key});
@@ -15,6 +16,7 @@ class AmigosScreen extends StatefulWidget {
 
 class _AmigosScreenState extends State<AmigosScreen> {
   List<String> amigos = []; // Lista de amigos a ser obtida do banco de dados
+  int solicitacoes = 5; // Substitua pelo número real de solicitações
 
   @override
   Widget build(BuildContext context) {
@@ -64,26 +66,61 @@ class _AmigosScreenState extends State<AmigosScreen> {
                   ],
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'MEUS AMIGOS',
-                          style: Styles.titulo,
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0, top: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'MEUS AMIGOS',
+                                style: Styles.tituloForte,
+                              ),
+                            ),
+                            ElevatedButton.icon(
+                              icon: const Icon(Icons.mail, color: Colors.white),
+                              label: Text(
+                                'Solicitações ($solicitacoes)',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Inter',
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SolicitacoesDeAmizadeScreen(),
+                                  ),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Styles.corPrincipal, // Cor do botão
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 20.0),
-                      child: BarraPesquisa(hintText: 'Pesquisar por amigos...'),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 20.0),
+                        child:
+                            BarraPesquisa(hintText: 'Pesquisar por amigos...'),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: amigos.length,
                         itemBuilder: (context, index) {
                           return Padding(
@@ -128,8 +165,8 @@ class _AmigosScreenState extends State<AmigosScreen> {
                           );
                         },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
       ),
@@ -178,11 +215,11 @@ class _AmigosScreenState extends State<AmigosScreen> {
                 TextSpan(
                   text: amigo,
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      height: 1.5),
                 ),
                 const TextSpan(
                   text: ' ?',

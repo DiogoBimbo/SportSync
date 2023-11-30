@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 
 class AmigoContaScreen extends StatelessWidget {
@@ -26,7 +27,7 @@ class AmigoContaScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          '$nomeAmigo Conta',
+          'Conta de ${limitarString(nomeAmigo, 20)}',
           style: Styles.tituloBarra,
         ),
       ),
@@ -95,19 +96,23 @@ class AmigoContaScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 20.0),
                         // Missões Cumpridas do amigo
-                        RichText(
-                          text: TextSpan(
-                            style: Styles.textoMaior,
-                            children: <TextSpan>[
-                              TextSpan(text: '$nomeAmigo cumpriu '),
-                              TextSpan(
-                                text: '$missoesCumpridas',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: RichText(
+                            text: TextSpan(
+                              style: Styles.textoMaior,
+                              children: <TextSpan>[
+                                TextSpan(text: '$nomeAmigo cumpriu '),
+                                TextSpan(
+                                  text: '$missoesCumpridas',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              const TextSpan(text: ' missões!'),
-                            ],
+                                const TextSpan(text: ' missões!'),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         const SizedBox(height: 30.0),
