@@ -120,7 +120,7 @@ class _AmigosScreenState extends State<AmigosScreen> {
                       ),
                       ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: amigos.length,
                         itemBuilder: (context, index) {
                           return Padding(

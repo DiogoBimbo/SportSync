@@ -41,9 +41,9 @@ class _CriarGrupoPState extends State<CriarGrupoPScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: const BarraPesquisa(hintText: 'Pesquisar por amigos...'),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: BarraPesquisa(hintText: 'Pesquisar por amigos...'),
             ),
             Padding(
               padding: EdgeInsets.only(

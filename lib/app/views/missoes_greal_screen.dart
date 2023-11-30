@@ -92,7 +92,7 @@ class _MissoesGeralScreenState extends State<MissoesGeralScreen> {
               const SizedBox(height: 10),
               Divider(height: 1, color: Colors.grey[400]),
               const SizedBox(height: 20),
-              MissoesWidget(),
+              const MissoesWidget(),
             ],
           ),
         ),

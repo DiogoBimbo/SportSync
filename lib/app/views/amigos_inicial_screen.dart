@@ -87,45 +87,42 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    String nomeDaPessoa = 'Nome ${index + 1}';
-                    bool pessoaJaAdicionada = pessoas.contains(nomeDaPessoa);
+              child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  String nomeDaPessoa = 'Nome ${index + 1}';
+                  bool pessoaJaAdicionada = pessoas.contains(nomeDaPessoa);
 
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 12.0, left: 12.0, right: 12.0),
-                      child: ListTile(
-                        leading: const CircleAvatar(
-                          radius: 22,
-                          backgroundImage:
-                              NetworkImage('https://via.placeholder.com/150'),
-                        ),
-                        title: Text(
-                          limitarString(nomeDaPessoa, 25),
-                          style: Styles.textoDestacado,
-                        ),
-                        trailing: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (pessoaJaAdicionada) {
-                                removerDaLista(nomeDaPessoa);
-                              } else {
-                                adicionarNaLista(nomeDaPessoa);
-                              }
-                            });
-                          },
-                          icon: Icon(
-                            pessoaJaAdicionada ? Icons.remove : Icons.add,
-                          ),
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 12.0, left: 12.0, right: 12.0),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        radius: 22,
+                        backgroundImage:
+                            NetworkImage('https://via.placeholder.com/150'),
+                      ),
+                      title: Text(
+                        limitarString(nomeDaPessoa, 25),
+                        style: Styles.textoDestacado,
+                      ),
+                      trailing: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (pessoaJaAdicionada) {
+                              removerDaLista(nomeDaPessoa);
+                            } else {
+                              adicionarNaLista(nomeDaPessoa);
+                            }
+                          });
+                        },
+                        icon: Icon(
+                          pessoaJaAdicionada ? Icons.remove : Icons.add,
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
             Padding(

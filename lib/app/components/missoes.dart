@@ -3,6 +3,8 @@ import 'package:pi_app/app/components/barra_de_pesquisa.dart';
 import 'package:pi_app/app/styles/styles.dart';
 
 class MissoesWidget extends StatefulWidget {
+  const MissoesWidget({super.key});
+
   @override
   _MissoesWidgetState createState() => _MissoesWidgetState();
 }

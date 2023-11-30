@@ -38,7 +38,7 @@ class _MissoesGrupoScreenState extends State<MissoesGrupoScreen> {
               const SizedBox(height: 10),
               Divider(height: 1, color: Colors.grey[400]),
               const SizedBox(height: 20),
-              MissoesWidget(),
+              const MissoesWidget(),
             ],
           ),
         ),
@@ -81,7 +81,7 @@ class _MissoesGrupoScreenState extends State<MissoesGrupoScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => RankingScreen(),
+                builder: (context) => const RankingScreen(),
               ),
             );
           },
@@ -129,13 +129,13 @@ class _MissoesGrupoScreenState extends State<MissoesGrupoScreen> {
           alignment: Alignment.topRight,
           children: [
             Padding(
-              padding: EdgeInsets.all(3),
+              padding: const EdgeInsets.all(3),
               child: CircleAvatar(
                 radius: avatarRadius,
                 backgroundColor: posicaoCor,
                 child: CircleAvatar(
                   radius: avatarRadius - 3,
-                  backgroundImage: NetworkImage(
+                  backgroundImage: const NetworkImage(
                       'https://via.placeholder.com/150'), // Substituir pela URL da imagem do usuário
                 ),
               ),

@@ -103,12 +103,12 @@ class PlaceCard extends StatelessWidget {
                         overflow: TextOverflow
                             .ellipsis, // Adiciona ellipsis para textos longos
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         limitarString(placeAddress, 45),
                         style: Styles.texto,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       InkWell(
                         onTap: () {
                           // Adicione a ação desejada ao pressionar

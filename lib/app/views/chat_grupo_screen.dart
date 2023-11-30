@@ -99,7 +99,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MissoesGrupoScreen(),
+                      builder: (context) => const MissoesGrupoScreen(),
                     ),
                   );
                 },

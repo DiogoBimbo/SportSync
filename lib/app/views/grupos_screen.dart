@@ -86,7 +86,7 @@ class _GruposScreenState extends State<GruposScreen> {
                       ListView.builder(
                         itemCount: grupos.length,
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12.0),

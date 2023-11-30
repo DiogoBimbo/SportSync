@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
-
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
 
@@ -25,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> {
       theme: const DarkChatTheme(
         primaryColor: Color.fromARGB(197, 52, 39, 194),
         secondaryColor: Color.fromARGB(255, 68, 68, 68),
-        backgroundColor: Color.fromARGB(255, 46, 46, 46), 
+        backgroundColor: Color.fromARGB(255, 46, 46, 46),
         inputBackgroundColor: Color.fromARGB(255, 68, 68, 68),
         inputTextStyle: TextStyle(fontFamily: 'Inter'),
         // customizar o resto do tema do chat
