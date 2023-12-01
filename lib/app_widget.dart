@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pi_app/app/views/home_screen.dart';
+import 'package:pi_app/widgets/auth_check.dart';
 
 class AppWidget extends StatelessWidget {
   const AppWidget({super.key});

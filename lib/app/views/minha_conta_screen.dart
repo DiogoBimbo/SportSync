@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/home_screen.dart';
+import 'package:pi_app/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class MinhaContaScreen extends StatefulWidget {
   const MinhaContaScreen({Key? key}) : super(key: key);
@@ -18,8 +21,7 @@ class _MinhaContaScreenState extends State<MinhaContaScreen> {
   bool editandoEmail = false;
   bool editandoSenha = false;
 
-  String imagemDoUsuario =
-      'URL_DA_IMAGEM_DO_USUARIO'; // Substitua pela imagem real
+  String imagemDoUsuario = 'https://via.placeholder.com/150'; // Substitua pela imagem real
   String eloDoUsuario = 'Prata'; // Substitua pelo valor real
   int misssoesCumpridas =
       10; // Substitua pelo valor real - soma das missões fáceis, médias e difíceis
@@ -473,9 +475,18 @@ class _MinhaContaScreenState extends State<MinhaContaScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   TextButton.icon(
-                    onPressed: () {
-                      // Implemente a lógica para sair da conta
-                    },
+                    onPressed: () async {
+    try {
+      await context.read<AuthService>().logout();
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao sair: ${error.toString()}')),
+      );
+    }
+  },
                     icon: Icon(
                       Icons.exit_to_app,
                       color: Colors.red[400],
