@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/services/auth_service.dart';
 
 class AmigosInicialScreen extends StatefulWidget {
   const AmigosInicialScreen({Key? key}) : super(key: key);
@@ -13,6 +15,9 @@ class AmigosInicialScreen extends StatefulWidget {
 
 class _AmigosInicialState extends State<AmigosInicialScreen> {
   List<String> pessoas = []; // Lista de amigos a ser obtida do banco de dados
+  late FirebaseFirestore db;
+  late AuthService auth;
+
 
   @override
   Widget build(BuildContext context) {
