@@ -54,6 +54,20 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
     });
   }
 
+  // Método para enviar solicitações de amizade para todos os usuários selecionados
+  void enviarSolicitacoesDeAmizade() async {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+
+    for (User usuario in usuariosSelecionados) {
+      await _userService.sendFriendRequest(currentUserId, usuario.id);
+    }
+
+    // Após enviar as solicitações, você pode querer limpar a lista ou navegar para outra tela
+    setState(() {
+      usuariosSelecionados.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +110,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
                                     child: Image.asset(
-                                      usuario.photo, // URL da foto do usuário
+                                      usuario.photo, // foto do usuário
                                       width: 40,
                                       height: 40,
                                     ),
@@ -124,10 +138,10 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                                 width: 70,
                                 child: Center(
                                   child: Text(
-                                    limitarString(usuario.name, 8),
+                                    limitarString(
+                                        usuario.name, 8), // nome do usuário
                                     style: Styles.conteudo,
-                                    textAlign: TextAlign
-                                        .center, // Justifica o texto para o centro
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
@@ -143,7 +157,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
             Expanded(
               child: ListView.builder(
                 itemCount:
-                    todosUsuarios.length, // Use o tamanho da lista de usuários
+                    todosUsuarios.length, //  tamanho da lista de usuários
                 itemBuilder: (context, index) {
                   User usuario = todosUsuarios[index];
                   bool isSelecionado = usuariosSelecionados.contains(
@@ -155,10 +169,11 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                     child: ListTile(
                       leading: CircleAvatar(
                         radius: 22,
-                        backgroundImage: AssetImage(usuario.photo),
+                        backgroundImage:
+                            AssetImage(usuario.photo), // foto do usuário
                       ),
                       title: Text(
-                        limitarString(usuario.name, 25),
+                        limitarString(usuario.name, 25), // nome do usuário
                         style: Styles.textoDestacado,
                       ),
                       trailing: IconButton(
@@ -189,6 +204,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                           MaterialStateProperty.all<Color>(Styles.corPrincipal),
                     ),
                     onPressed: () {
+                      enviarSolicitacoesDeAmizade;
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) => const GeralScreen(),
                       ));

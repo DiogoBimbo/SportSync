@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
+import 'package:pi_app/app/models/users.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/conta_amigo_screen.dart';
+import 'package:pi_app/services/user_service.dart';
 
 class SolicitacoesDeAmizadeScreen extends StatefulWidget {
   const SolicitacoesDeAmizadeScreen({Key? key}) : super(key: key);
@@ -13,13 +16,40 @@ class SolicitacoesDeAmizadeScreen extends StatefulWidget {
 
 class _SolicitacoesDeAmizadeScreenState
     extends State<SolicitacoesDeAmizadeScreen> {
-  List<String> solicitacoes = [
-    // Lista de solicitações de amizade para testes
-    'João Carlinhos',
-    'Maria Desgraçada',
-    'Pedro Paulo',
-    'Ana Julia',
-  ];
+  final UserService _userService = UserService();
+  List<User> solicitacoes =
+      []; // Lista para armazenar solicitações de amizade pendentes
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPendingFriendRequests();
+  }
+
+  void fetchPendingFriendRequests() async {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+    try {
+      List<User> friendRequests =
+          await _userService.fetchFriendRequests(currentUserId);
+      setState(() {
+        solicitacoes = friendRequests;
+      });
+    } catch (e) {
+      print('Erro ao buscar solicitações de amizade: $e');
+    }
+  }
+
+  void acceptFriendRequest(String fromUserId) async {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+    await _userService.acceptFriendRequest(fromUserId, currentUserId);
+    fetchPendingFriendRequests(); // Atualiza a lista após aceitar a solicitação
+  }
+
+  void declineFriendRequest(String fromUserId) async {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+    await _userService.declineFriendRequest(fromUserId, currentUserId);
+    fetchPendingFriendRequests(); // Atualiza a lista após recusar a solicitação
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,51 +101,47 @@ class _SolicitacoesDeAmizadeScreenState
   }
 
   Widget _buildSolicitacaoItem(int index) {
-    String nomeDaPessoa = solicitacoes[index];
+    User user = solicitacoes[index];
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AmigoContaScreen(
-                nomeAmigo: nomeDaPessoa,
-                imagemDoAmigo: 'https://via.placeholder.com/150',
-                eloDoAmigo: 'Elo', // Substitua com o elo real, se aplicável
-                missoesCumpridas: 120, // Substitua com os dados reais
-                missoesFaceis: 25,
-                missoesMedias: 73,
-                missoesDificeis: 22,
-              ),
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => AmigoContaScreen(
+          //       nomeAmigo: user.id,
+          //       imagemDoAmigo: 'https://via.placeholder.com/150',
+          //       eloDoAmigo: 'Elo', // Substitua com o elo real, se aplicável
+          //       missoesCumpridas: 120, // Substitua com os dados reais
+          //       missoesFaceis: 25,
+          //       missoesMedias: 73,
+          //       missoesDificeis: 22,
+          //     ),
+          //   ),
+          // );
         },
         child: ListTile(
-          leading: const CircleAvatar(
+          leading: CircleAvatar(
             radius: 22,
-            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+            backgroundImage: AssetImage(user.photo),
           ),
           title: Text(
-            limitarString(nomeDaPessoa, 25),
+            limitarString(user.name, 25),
             style: Styles.textoDestacado,
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                onPressed: () {
-                  // Implementar lógica de recusar a solicitação
-                },
+                onPressed: () => declineFriendRequest(user.id),
                 icon: Icon(
                   Icons.close,
                   color: Colors.red[400],
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  // Implementar lógica de aceitar a solicitação
-                },
+                onPressed: () => acceptFriendRequest(user.id),
                 icon: const Icon(
                   Icons.check,
                   color: Colors.white,

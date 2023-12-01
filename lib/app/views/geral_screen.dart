@@ -32,7 +32,7 @@ class GeralScreen extends StatelessWidget {
                     'https://via.placeholder.com/150'), // Colocar a imagem do usuário integrado com backend
               ),
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => const MinhaContaScreen()),
