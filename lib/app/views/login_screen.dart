@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
@@ -6,11 +9,6 @@ import 'package:pi_app/app/views/home_screen.dart';
 import 'amigos_inicial_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 
-const users = {
-  'dribbble@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
-};
-
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
 
@@ -18,45 +16,72 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-  class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final senha = TextEditingController();
   bool isSigningUp = false;
 
-
-Future<String?> _authUser(LoginData data) async {
-  isSigningUp = false;
-  try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: data.name,
-      password: data.password,
-    );
-    // Sucesso: retorna null
-    return null;
-  } on FirebaseAuthException catch (e) {
-    // Falha: retorna a mensagem de erro
-    return e.message;
+  Future<String?> _authUser(LoginData data) async {
+    isSigningUp = false;
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: data.name,
+        password: data.password,
+      );
+      // Sucesso: retorna null
+      return null;
+    } on FirebaseAuthException catch (e) {
+      // Falha: retorna a mensagem de erro
+      return e.message;
+    }
   }
-}
 
-Future<String?> _signupUser(SignupData data) async {
-  isSigningUp = true;
-  try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: data.name!,
-      password: data.password!,
-    );
-    // Opcional: Salvar informações adicionais do usuário no Firestore
-    // Sucesso: retorna null
-    return null;
-  } on FirebaseAuthException catch (e) {
-    // Falha: retorna a mensagem de erro
-    return e.message;
+  Future<String?> _signupUser(SignupData data) async {
+    isSigningUp = true;
+    try {
+      // Criação da conta do usuário
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: data.name!,
+        password: data.password!,
+      );
+
+      // Extrair nome do usuário a partir do e-mail
+      String userName = data.name!.split('@').first;
+
+      // Selecionar uma foto aleatória de um conjunto de fotos
+      List<String> photoList = [
+        'assets/images/user_img1.png',
+        'assets/images/user_img2.png',
+        'assets/images/user_img3.png',
+        'assets/images/user_img4.png',
+        'assets/images/user_img5.png',
+        'assets/images/user_img6.png',
+        'assets/images/user_img7.png',
+        'assets/images/user_img8.png',
+        'assets/images/user_img9.png',
+        'assets/images/user_img10.png'
+      ];
+      Random random = Random();
+      String randomPhoto = photoList[random.nextInt(photoList.length)];
+
+      // Salvar informações adicionais no Firestore
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'name': userName,
+        'photo': randomPhoto,
+      });
+
+      return null; // Sucesso
+    } on FirebaseAuthException catch (e) {
+      return e.message; // Falha
+    }
   }
-}
 
-Future<String?> _recoverPassword(String name) async {
+  Future<String?> _recoverPassword(String name) async {
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: name);
       // Se o email for enviado com sucesso, retornamos null, indicando que não houve erro.
@@ -69,7 +94,6 @@ Future<String?> _recoverPassword(String name) async {
 
   Duration get loginTime => const Duration(milliseconds: 2250);
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,16 +104,16 @@ Future<String?> _recoverPassword(String name) async {
             onLogin: _authUser,
             onSignup: _signupUser,
             onSubmitAnimationCompleted: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => isSigningUp
-                  ? const AmigosInicialScreen()
-                  : const GeralScreen(),
-            ),
-            (route) => false,
-          );
-        },
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => isSigningUp
+                      ? const AmigosInicialScreen()
+                      : const GeralScreen(),
+                ),
+                (route) => false,
+              );
+            },
             onRecoverPassword: _recoverPassword,
             messages: LoginMessages(
               userHint: 'Email',
@@ -153,9 +177,8 @@ Future<String?> _recoverPassword(String name) async {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.of(context).push(
-                          MaterialPageRoute(
-                              builder: (context) => HomePage()),
-                        );
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
             ),
           ),
