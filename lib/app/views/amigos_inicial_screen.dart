@@ -54,20 +54,6 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
     });
   }
 
-  // Método para enviar solicitações de amizade para todos os usuários selecionados
-  void enviarSolicitacoesDeAmizade() async {
-    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-
-    for (User usuario in usuariosSelecionados) {
-      await _userService.sendFriendRequest(currentUserId, usuario.id);
-    }
-
-    // Após enviar as solicitações, você pode querer limpar a lista ou navegar para outra tela
-    setState(() {
-      usuariosSelecionados.clear();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,12 +189,15 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                       backgroundColor:
                           MaterialStateProperty.all<Color>(Styles.corPrincipal),
                     ),
-                    onPressed: () {
-                      enviarSolicitacoesDeAmizade;
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const GeralScreen(),
-                      ));
-                      // implementar a ação de adicionar os amigos no banco de dados
+                    onPressed: () async {
+                      String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+                        for (var usuario in usuariosSelecionados) {
+                          await _userService.sendFriendRequest(currentUserId, usuario.id);
+                      }
+                      // Opcional: Navegar para outra tela após enviar as solicitações
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const GeralScreen()),
+                      );
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(12.0),

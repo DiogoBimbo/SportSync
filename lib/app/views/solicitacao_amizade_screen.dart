@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/models/users.dart';
 import 'package:pi_app/app/styles/styles.dart';
-import 'package:pi_app/app/views/conta_amigo_screen.dart';
 import 'package:pi_app/services/user_service.dart';
 
 class SolicitacoesDeAmizadeScreen extends StatefulWidget {
@@ -14,43 +13,40 @@ class SolicitacoesDeAmizadeScreen extends StatefulWidget {
       _SolicitacoesDeAmizadeScreenState();
 }
 
+
 class _SolicitacoesDeAmizadeScreenState
     extends State<SolicitacoesDeAmizadeScreen> {
   final UserService _userService = UserService();
-  List<User> solicitacoes =
-      []; // Lista para armazenar solicitações de amizade pendentes
+  List<User> solicitacoes = []; // Lista para armazenar solicitações de amizade pendentes
+  bool isLoading = true; // Estado de carregamento adicionado
 
   @override
   void initState() {
     super.initState();
-    fetchPendingFriendRequests();
+    _fetchFriendRequests();
   }
 
-  void fetchPendingFriendRequests() async {
+  
+  void _fetchFriendRequests() async {
     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-    try {
-      List<User> friendRequests =
-          await _userService.fetchFriendRequests(currentUserId);
-      setState(() {
-        solicitacoes = friendRequests;
-      });
-    } catch (e) {
-      print('Erro ao buscar solicitações de amizade: $e');
-    }
+    List<User> friendRequests = await _userService.fetchFriendRequests(currentUserId);
+    setState(() {
+      solicitacoes = friendRequests;
+      isLoading = false; // A busca foi completada
+    });
   }
 
   void acceptFriendRequest(String fromUserId) async {
     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
     await _userService.acceptFriendRequest(fromUserId, currentUserId);
-    fetchPendingFriendRequests(); // Atualiza a lista após aceitar a solicitação
+    _fetchFriendRequests(); // Atualiza a lista após aceitar a solicitação
   }
 
   void declineFriendRequest(String fromUserId) async {
     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
     await _userService.declineFriendRequest(fromUserId, currentUserId);
-    fetchPendingFriendRequests(); // Atualiza a lista após recusar a solicitação
+    _fetchFriendRequests(); // Atualiza a lista após recusar a solicitação
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,22 +56,27 @@ class _SolicitacoesDeAmizadeScreenState
           style: Styles.tituloBarra,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
-          child: solicitacoes.isEmpty
-              ? const Center(
-                  child: Text(
-                    'Você ainda não possui nenhuma solicitação de amizade :(',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                    ),
-                    textAlign: TextAlign.center,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0),
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            :
+              solicitacoes.isEmpty
+            ? const Center(
+                child: Text(
+                  'Você ainda não possui nenhuma solicitação de amizade :(',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w400,
                   ),
-                )
-              : Column(
+                  textAlign: TextAlign.center,
+                ),
+              )
+            : SingleChildScrollView(
+                child: Column(
                   children: [
                     Align(
                       alignment: Alignment.centerLeft,
@@ -95,7 +96,7 @@ class _SolicitacoesDeAmizadeScreenState
                     ),
                   ],
                 ),
-        ),
+              ),
       ),
     );
   }
@@ -133,20 +134,14 @@ class _SolicitacoesDeAmizadeScreenState
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
+             IconButton(
+  onPressed: () => declineFriendRequest(user.id),
+  icon: const Icon(Icons.close, color: Color.fromARGB(251, 239, 83, 80)),
+),
               IconButton(
-                onPressed: () => declineFriendRequest(user.id),
-                icon: Icon(
-                  Icons.close,
-                  color: Colors.red[400],
-                ),
-              ),
-              IconButton(
-                onPressed: () => acceptFriendRequest(user.id),
-                icon: const Icon(
-                  Icons.check,
-                  color: Colors.white,
-                ),
-              ),
+  onPressed: () => acceptFriendRequest(user.id),
+  icon: const Icon(Icons.check, color: Colors.white),
+),
             ],
           ),
         ),

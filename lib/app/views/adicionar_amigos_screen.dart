@@ -26,21 +26,41 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
     _fetchUsers();
   }
 
-  // precisa ver se o usuário já é amigo
-  void _fetchUsers() async {
-    try {
-      String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-      List<User> usersList = await _userService.fetchUsers();
+//   void _fetchUsers() async {
+//   try {
+//     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+//     List<User> usersList = await _userService.fetchUsers();
+//     List<String> friendIds = await _userService.fetchUserFriends(currentUserId);
 
-      setState(() {
-        todosUsuarios =
-            usersList.where((user) => user.id != currentUserId).toList();
-      });
-    } catch (e) {
-      // Tratar o erro aqui
-      print(e); // Para fins de depuração
-    }
+//     setState(() {
+//       todosUsuarios = usersList.where((user) => 
+//         user.id != currentUserId && !friendIds.contains(user.id)).toList();
+//     });
+//   } catch (e) {
+//     // Tratar o erro aqui
+//     print(e); // Para fins de depuração
+//   }
+// }
+
+void _fetchUsers() async {
+  try {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+    List<User> usersList = await _userService.fetchUsers();
+    List<String> friendIds = await _userService.fetchUserFriends(currentUserId);
+    List<String> requestedUserIds = await _userService.fetchSentFriendRequests(currentUserId);
+
+    setState(() {
+      todosUsuarios = usersList.where((user) => 
+        user.id != currentUserId &&
+        !friendIds.contains(user.id) &&
+        !requestedUserIds.contains(user.id)).toList();
+    });
+  } catch (e) {
+    // Tratar o erro aqui
+    print(e); // Para fins de depuração
   }
+}
+
 
   void adicionarNaLista(User usuario) {
     setState(() {
@@ -51,20 +71,6 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
   void removerDaLista(User usuario) {
     setState(() {
       usuariosSelecionados.remove(usuario); // Remove o objeto User
-    });
-  }
-
-  // Método para enviar solicitações de amizade para todos os usuários selecionados
-  void enviarSolicitacoesDeAmizade() async {
-    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-
-    for (User usuario in usuariosSelecionados) {
-      await _userService.sendFriendRequest(currentUserId, usuario.id);
-    }
-
-    // Após enviar as solicitações, você pode querer limpar a lista ou navegar para outra tela
-    setState(() {
-      usuariosSelecionados.clear();
     });
   }
 
@@ -211,12 +217,16 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Styles.corPrincipal),
                           ),
-                    onPressed: usuariosSelecionados.isEmpty
-                        ? null
-                        : () {
-                            Navigator.of(context).pop();
-                            // implementar a ação de adicionar os amigos no banco de dados
-                          },
+                    onPressed: usuariosSelecionados.isEmpty ? null : () async {
+                      String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+                      for (var usuario in usuariosSelecionados) {
+                        await _userService.sendFriendRequest(currentUserId, usuario.id);
+                      }
+                      setState(() {
+                        todosUsuarios.removeWhere((user) => usuariosSelecionados.contains(user));
+                        usuariosSelecionados.clear();
+                      });
+                    },
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
