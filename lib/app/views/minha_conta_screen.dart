@@ -21,7 +21,8 @@ class _MinhaContaScreenState extends State<MinhaContaScreen> {
   bool editandoEmail = false;
   bool editandoSenha = false;
 
-  String imagemDoUsuario = 'https://via.placeholder.com/150'; // Substitua pela imagem real
+  String imagemDoUsuario =
+      'https://via.placeholder.com/150'; // Substitua pela imagem real
   String eloDoUsuario = 'Prata'; // Substitua pelo valor real
   int misssoesCumpridas =
       10; // Substitua pelo valor real - soma das missões fáceis, médias e difíceis
@@ -476,17 +477,19 @@ class _MinhaContaScreenState extends State<MinhaContaScreen> {
                 children: [
                   TextButton.icon(
                     onPressed: () async {
-    try {
-      await context.read<AuthService>().logout();
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao sair: ${error.toString()}')),
-      );
-    }
-  },
+                      try {
+                        await context.read<AuthService>().logout();
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text('Erro ao sair: ${error.toString()}')),
+                        );
+                      }
+                    },
                     icon: Icon(
                       Icons.exit_to_app,
                       color: Colors.red[400],

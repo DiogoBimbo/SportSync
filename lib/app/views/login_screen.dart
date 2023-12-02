@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:pi_app/app/components/imagens.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -52,16 +52,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Selecionar uma foto aleatória de um conjunto de fotos
       List<String> photoList = [
-        'assets/images/user_img1.png',
-        'assets/images/user_img2.png',
-        'assets/images/user_img3.png',
-        'assets/images/user_img4.png',
-        'assets/images/user_img5.png',
-        'assets/images/user_img6.png',
-        'assets/images/user_img7.png',
-        'assets/images/user_img8.png',
-        'assets/images/user_img9.png',
-        'assets/images/user_img10.png'
+        ImagensUsers.userImg1,
+        ImagensUsers.userImg2,
+        ImagensUsers.userImg3,
+        ImagensUsers.userImg4,
+        ImagensUsers.userImg5,
+        ImagensUsers.userImg6,
+        ImagensUsers.userImg7,
+        ImagensUsers.userImg8,
+        ImagensUsers.userImg9,
+        ImagensUsers.userImg10
       ];
       Random random = Random();
       String randomPhoto = photoList[random.nextInt(photoList.length)];

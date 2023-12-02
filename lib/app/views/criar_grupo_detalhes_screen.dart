@@ -1,18 +1,94 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pi_app/app/models/users.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/app/views/geral_screen.dart';
+import 'package:pi_app/services/group_service.dart';
 
 class CriarGrupoDScreen extends StatefulWidget {
-  const CriarGrupoDScreen({Key? key}) : super(key: key);
+  final List<User> participantes;
+  const CriarGrupoDScreen({Key? key, required this.participantes})
+      : super(key: key);
 
   @override
   _CriarGrupoDScreenState createState() => _CriarGrupoDScreenState();
 }
 
 class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
-  List<String> participantes =
-      List.generate(10, (index) => 'Nome ${index + 1}');
   TextEditingController nomeGrupoController = TextEditingController();
-  String? imagemDoGrupo; // Para armazenar o caminho da imagem do grupo
+  XFile? imagemDoGrupo; // Para armazenar o caminho da imagem do grupo
+
+  void criarGrupo() async {
+    String nomeGrupo = nomeGrupoController.text.trim();
+    if (nomeGrupo.isEmpty) {
+      mostrarAlerta('Erro', 'Por favor, insira um nome para o grupo.');
+      return;
+    }
+
+    try {
+      // Crie o registro do grupo no Firestore
+      DocumentReference groupDocRef = await GroupService().createGroup(
+        name: nomeGrupo,
+        members: widget.participantes,
+      );
+
+      // Se o usuário selecionou uma imagem, faça o upload
+      String? imageUrl;
+      if (imagemDoGrupo != null) {
+        imageUrl = await GroupService().uploadGroupImage(imagemDoGrupo!.path);
+        // Atualize o registro do grupo com a URL da imagem
+        await groupDocRef.update({'imageUrl': imageUrl});
+      }
+
+      // Sucesso: Navegue para a tela de grupos
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) =>
+              GeralScreen(), // Substitua pela sua tela de grupos
+        ),
+      );
+    } catch (e) {
+      mostrarAlerta('Erro', 'Ocorreu um erro ao criar o grupo: $e');
+    }
+  }
+
+  void mostrarAlerta(String titulo, String mensagem) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(titulo),
+        content: Text(mensagem),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  selecionarImagem() async {
+    final ImagePicker picker = ImagePicker();
+
+    try {
+      final pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        setState(() {
+          imagemDoGrupo = pickedFile;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +122,9 @@ class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
                           color: Colors.grey[700],
                           image: imagemDoGrupo != null
                               ? DecorationImage(
-                                  image: NetworkImage(imagemDoGrupo!),
+                                  image: FileImage(
+                                    File(imagemDoGrupo!.path),
+                                  ),
                                   fit: BoxFit.cover,
                                 )
                               : null,
@@ -57,8 +135,7 @@ class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(50),
                               onTap: () {
-                                // Implementar a lógica para escolher uma imagem
-                                // Pode abrir um seletor de imagem ou câmera
+                                selecionarImagem();
                               },
                               child: Center(
                                 child: imagemDoGrupo == null
@@ -95,7 +172,7 @@ class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
               child: Text(
-                'Participantes - ${participantes.length}',
+                'Participantes - ${widget.participantes.length}',
                 style: Styles.texto,
               ),
             ),
@@ -104,21 +181,21 @@ class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
             // Lista de participantes
             Expanded(
               child: ListView.builder(
-                itemCount: participantes.length,
+                itemCount: widget.participantes.length,
                 itemBuilder: (context, index) {
-                  String nomeDoParticipante = participantes[index];
+                  User participante = widget.participantes[index];
 
                   return Padding(
                     padding: const EdgeInsets.only(
                         bottom: 12.0, right: 12.0, left: 12.0),
                     child: ListTile(
-                      leading: const CircleAvatar(
+                      leading: CircleAvatar(
                         radius: 22,
                         backgroundImage: NetworkImage(
-                            'https://via.placeholder.com/150'), // Substitua pela imagem real
+                            participante.photo), // Substitua pela imagem real
                       ),
                       title: Text(
-                        nomeDoParticipante,
+                        participante.name,
                         style: Styles.textoDestacado,
                       ),
                     ),
@@ -132,7 +209,7 @@ class _CriarGrupoDScreenState extends State<CriarGrupoDScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Styles.corPrincipal,
         onPressed: () {
-          // Implementar a criação do grupo e voltar para a tela de grupos
+          criarGrupo();
         },
         child: const Icon(
           Icons.check,

@@ -95,7 +95,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(50),
-                                    child: Image.asset(
+                                    child: Image.network(
                                       usuario.photo, // foto do usuário
                                       width: 40,
                                       height: 40,
@@ -156,7 +156,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                       leading: CircleAvatar(
                         radius: 22,
                         backgroundImage:
-                            AssetImage(usuario.photo), // foto do usuário
+                            NetworkImage(usuario.photo), // foto do usuário
                       ),
                       title: Text(
                         limitarString(usuario.name, 25), // nome do usuário
@@ -190,13 +190,16 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                           MaterialStateProperty.all<Color>(Styles.corPrincipal),
                     ),
                     onPressed: () async {
-                      String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-                        for (var usuario in usuariosSelecionados) {
-                          await _userService.sendFriendRequest(currentUserId, usuario.id);
+                      String currentUserId =
+                          auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+                      for (var usuario in usuariosSelecionados) {
+                        await _userService.sendFriendRequest(
+                            currentUserId, usuario.id);
                       }
                       // Opcional: Navegar para outra tela após enviar as solicitações
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => const GeralScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const GeralScreen()),
                       );
                     },
                     child: const Padding(

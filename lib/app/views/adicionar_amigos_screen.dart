@@ -26,41 +26,28 @@ class _AdicionarAmigosState extends State<AdicionarAmigosScreen> {
     _fetchUsers();
   }
 
-//   void _fetchUsers() async {
-//   try {
-//     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-//     List<User> usersList = await _userService.fetchUsers();
-//     List<String> friendIds = await _userService.fetchUserFriends(currentUserId);
+  void _fetchUsers() async {
+    try {
+      String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+      List<User> usersList = await _userService.fetchUsers();
+      List<String> friendIds =
+          await _userService.fetchUserFriends(currentUserId);
+      List<String> requestedUserIds =
+          await _userService.fetchSentFriendRequests(currentUserId);
 
-//     setState(() {
-//       todosUsuarios = usersList.where((user) => 
-//         user.id != currentUserId && !friendIds.contains(user.id)).toList();
-//     });
-//   } catch (e) {
-//     // Tratar o erro aqui
-//     print(e); // Para fins de depuração
-//   }
-// }
-
-void _fetchUsers() async {
-  try {
-    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-    List<User> usersList = await _userService.fetchUsers();
-    List<String> friendIds = await _userService.fetchUserFriends(currentUserId);
-    List<String> requestedUserIds = await _userService.fetchSentFriendRequests(currentUserId);
-
-    setState(() {
-      todosUsuarios = usersList.where((user) => 
-        user.id != currentUserId &&
-        !friendIds.contains(user.id) &&
-        !requestedUserIds.contains(user.id)).toList();
-    });
-  } catch (e) {
-    // Tratar o erro aqui
-    print(e); // Para fins de depuração
+      setState(() {
+        todosUsuarios = usersList
+            .where((user) =>
+                user.id != currentUserId &&
+                !friendIds.contains(user.id) &&
+                !requestedUserIds.contains(user.id))
+            .toList();
+      });
+    } catch (e) {
+      // Tratar o erro aqui
+      print(e); // Para fins de depuração
+    }
   }
-}
-
 
   void adicionarNaLista(User usuario) {
     setState(() {
@@ -116,7 +103,7 @@ void _fetchUsers() async {
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(50),
-                                        child: Image.asset(
+                                        child: Image.network(
                                           usuario.photo, // foto do usuário
                                           width: 40,
                                           height: 40,
@@ -177,7 +164,7 @@ void _fetchUsers() async {
                       leading: CircleAvatar(
                         radius: 22,
                         backgroundImage:
-                            AssetImage(usuario.photo), // foto do usuário
+                            NetworkImage(usuario.photo), // foto do usuário
                       ),
                       title: Text(
                         limitarString(usuario.name, 25),
@@ -217,16 +204,22 @@ void _fetchUsers() async {
                             backgroundColor: MaterialStateProperty.all<Color>(
                                 Styles.corPrincipal),
                           ),
-                    onPressed: usuariosSelecionados.isEmpty ? null : () async {
-                      String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-                      for (var usuario in usuariosSelecionados) {
-                        await _userService.sendFriendRequest(currentUserId, usuario.id);
-                      }
-                      setState(() {
-                        todosUsuarios.removeWhere((user) => usuariosSelecionados.contains(user));
-                        usuariosSelecionados.clear();
-                      });
-                    },
+                    onPressed: usuariosSelecionados.isEmpty
+                        ? null
+                        : () async {
+                            String currentUserId =
+                                auth.FirebaseAuth.instance.currentUser?.uid ??
+                                    '';
+                            for (var usuario in usuariosSelecionados) {
+                              await _userService.sendFriendRequest(
+                                  currentUserId, usuario.id);
+                            }
+                            setState(() {
+                              todosUsuarios.removeWhere((user) =>
+                                  usuariosSelecionados.contains(user));
+                              usuariosSelecionados.clear();
+                            });
+                          },
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
@@ -235,8 +228,8 @@ void _fetchUsers() async {
                           fontFamily: 'Inter',
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
-                          color: todosUsuarios.isEmpty
-                              ? Colors.grey
+                          color: usuariosSelecionados.isEmpty
+                              ? Colors.white.withOpacity(0.5)
                               : Colors.white,
                         ),
                       ),

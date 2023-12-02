@@ -13,11 +13,11 @@ class SolicitacoesDeAmizadeScreen extends StatefulWidget {
       _SolicitacoesDeAmizadeScreenState();
 }
 
-
 class _SolicitacoesDeAmizadeScreenState
     extends State<SolicitacoesDeAmizadeScreen> {
   final UserService _userService = UserService();
-  List<User> solicitacoes = []; // Lista para armazenar solicitações de amizade pendentes
+  List<User> solicitacoes =
+      []; // Lista para armazenar solicitações de amizade pendentes
   bool isLoading = true; // Estado de carregamento adicionado
 
   @override
@@ -26,10 +26,10 @@ class _SolicitacoesDeAmizadeScreenState
     _fetchFriendRequests();
   }
 
-  
   void _fetchFriendRequests() async {
     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
-    List<User> friendRequests = await _userService.fetchFriendRequests(currentUserId);
+    List<User> friendRequests =
+        await _userService.fetchFriendRequests(currentUserId);
     setState(() {
       solicitacoes = friendRequests;
       isLoading = false; // A busca foi completada
@@ -47,6 +47,7 @@ class _SolicitacoesDeAmizadeScreenState
     await _userService.declineFriendRequest(fromUserId, currentUserId);
     _fetchFriendRequests(); // Atualiza a lista após recusar a solicitação
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,41 +63,40 @@ class _SolicitacoesDeAmizadeScreenState
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            :
-              solicitacoes.isEmpty
-            ? const Center(
-                child: Text(
-                  'Você ainda não possui nenhuma solicitação de amizade :(',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '${solicitacoes.length} ${solicitacoes.length == 1 ? 'solicitação pendente' : 'solicitações pendentes'}',
-                        style: Styles.texto,
+            : solicitacoes.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Você ainda não possui nenhuma solicitação de amizade :(',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontFamily: 'Inter',
+                        fontWeight: FontWeight.w400,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 20),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: solicitacoes.length,
-                      itemBuilder: (context, index) {
-                        return _buildSolicitacaoItem(index);
-                      },
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            '${solicitacoes.length} ${solicitacoes.length == 1 ? 'solicitação pendente' : 'solicitações pendentes'}',
+                            style: Styles.texto,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: solicitacoes.length,
+                          itemBuilder: (context, index) {
+                            return _buildSolicitacaoItem(index);
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
       ),
     );
   }
@@ -105,45 +105,28 @@ class _SolicitacoesDeAmizadeScreenState
     User user = solicitacoes[index];
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: InkWell(
-        onTap: () {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => AmigoContaScreen(
-          //       nomeAmigo: user.id,
-          //       imagemDoAmigo: 'https://via.placeholder.com/150',
-          //       eloDoAmigo: 'Elo', // Substitua com o elo real, se aplicável
-          //       missoesCumpridas: 120, // Substitua com os dados reais
-          //       missoesFaceis: 25,
-          //       missoesMedias: 73,
-          //       missoesDificeis: 22,
-          //     ),
-          //   ),
-          // );
-        },
-        child: ListTile(
-          leading: CircleAvatar(
-            radius: 22,
-            backgroundImage: AssetImage(user.photo),
-          ),
-          title: Text(
-            limitarString(user.name, 25),
-            style: Styles.textoDestacado,
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-             IconButton(
-  onPressed: () => declineFriendRequest(user.id),
-  icon: const Icon(Icons.close, color: Color.fromARGB(251, 239, 83, 80)),
-),
-              IconButton(
-  onPressed: () => acceptFriendRequest(user.id),
-  icon: const Icon(Icons.check, color: Colors.white),
-),
-            ],
-          ),
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 22,
+          backgroundImage: NetworkImage(user.photo),
+        ),
+        title: Text(
+          limitarString(user.name, 25),
+          style: Styles.textoDestacado,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () => declineFriendRequest(user.id),
+              icon: const Icon(Icons.close,
+                  color: Color.fromARGB(251, 239, 83, 80)),
+            ),
+            IconButton(
+              onPressed: () => acceptFriendRequest(user.id),
+              icon: const Icon(Icons.check, color: Colors.white),
+            ),
+          ],
         ),
       ),
     );

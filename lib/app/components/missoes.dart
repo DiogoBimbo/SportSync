@@ -261,7 +261,7 @@ class _MissoesWidgetState extends State<MissoesWidget> {
   Widget _buildFilterChips() {
     return SizedBox(
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ChoiceChip(
             label: const Padding(
@@ -291,6 +291,7 @@ class _MissoesWidgetState extends State<MissoesWidget> {
               child: Icon(Icons.all_inclusive),
             ),
           ),
+          SizedBox(width: 8),
           ChoiceChip(
             label: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 0),
@@ -317,6 +318,7 @@ class _MissoesWidgetState extends State<MissoesWidget> {
               child: Icon(Icons.check),
             ),
           ),
+          SizedBox(width: 8),
           ChoiceChip(
             label: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 0),
