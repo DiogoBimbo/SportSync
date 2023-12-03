@@ -8,9 +8,13 @@ import 'package:pi_app/app/views/missoes_grupo_screen.dart';
 class ChatGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
   final String imagemDoGrupo;
+  final String groupId;
 
   const ChatGrupoScreen(
-      {super.key, required this.nomeDoGrupo, required this.imagemDoGrupo});
+      {super.key,
+      required this.nomeDoGrupo,
+      required this.imagemDoGrupo,
+      required this.groupId});
 
   @override
   _ChatGrupoScreenState createState() => _ChatGrupoScreenState();
@@ -28,14 +32,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const InformacoesGrupoScreen(
-                      usuarioEhDono:
-                          true, // implementar a obtenção do status de dono do grupo do banco de dados
-                      nomeDoGrupo:
-                          'Nome do grupo', // implementar a obtenção do nome do grupo do banco de dados
-                      imagemDoGrupo:
-                          'https://via.placeholder.com/150' // implementar a obtenção da imagem do grupo do banco de dados
-                      ),
+                  builder: (context) => InformacoesGrupoScreen(groupId: widget.groupId,),
                 ),
               );
             },
@@ -68,14 +65,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const InformacoesGrupoScreen(
-                      usuarioEhDono:
-                          true, // implementar a obtenção do status de dono do grupo do banco de dados
-                      nomeDoGrupo:
-                          'Nome do grupo', // implementar a obtenção do nome do grupo do banco de dados
-                      imagemDoGrupo:
-                          'https://via.placeholder.com/150' // implementar a obtenção da imagem do grupo do banco de dados
-                      ),
+                  builder: (context) => InformacoesGrupoScreen(groupId: widget.groupId,),
                 ),
               );
             },

@@ -61,7 +61,7 @@ class _AmigosScreenState extends State<AmigosScreen> {
     return Scaffold(
       body: SafeArea(
         child: isLoading
-            ? Center(
+            ? const Center(
                 child:
                     CircularProgressIndicator()) // Mostra o indicador de progresso enquanto carrega
             : amigos.isEmpty

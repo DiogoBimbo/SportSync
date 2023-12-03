@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:pi_app/app/models/group.dart';
 import 'package:pi_app/app/models/users.dart';
 
 class GroupService {
@@ -51,4 +52,38 @@ class GroupService {
 
     return groupDocRef; // Retorna a referência do documento criado
   }
+
+  Future<Group> getGroupById(String groupId) async {
+    DocumentSnapshot groupDoc = await _firestore.collection('Groups').doc(groupId).get();
+    if (!groupDoc.exists) {
+      throw Exception('Grupo não encontrado');
+    }
+    return Group.fromDocument(groupDoc);
+  }
+
+  // Future<List<User>> getGroupMembers(List<String> memberIds) async {
+  //   List<User> members = [];
+  //   for (String memberId in memberIds) {
+  //     DocumentSnapshot userDoc = await _firestore.collection('Users').doc(memberId).get();
+  //     if (userDoc.exists) {
+  //       members.add(User.fromDocument(userDoc));
+  //     }
+  //   }
+  //   return members;
+  // }
+
+  Future<List<User>> getGroupMembers(Group group) async {
+    List<User> members = [];
+    // Obtenha a lista de IDs dos membros do mapa 'membersWithStatus'
+    List<String> memberIds = group.membersWithStatus.keys.toList();
+    
+    for (String memberId in memberIds) {
+      DocumentSnapshot userDoc = await _firestore.collection('Users').doc(memberId).get();
+      if (userDoc.exists) {
+        members.add(User.fromDocument(userDoc));
+      }
+    }
+    return members;
+  }
+  
 }
