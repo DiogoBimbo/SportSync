@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/missoes.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
@@ -5,13 +6,27 @@ import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/ranking_screen.dart';
 
 class MissoesGrupoScreen extends StatefulWidget {
-  const MissoesGrupoScreen({Key? key}) : super(key: key);
+  final String groupId;
+  const MissoesGrupoScreen({Key? key, required this.groupId}) : super(key: key);
 
   @override
   _MissoesGrupoScreenState createState() => _MissoesGrupoScreenState();
 }
 
 class _MissoesGrupoScreenState extends State<MissoesGrupoScreen> {
+
+  Future<List<Map<String, dynamic>>> fetchMissionsByGroup(String groupId) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('Missions')
+      .where('groupId', isEqualTo: groupId)
+      .get();
+    return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+  } catch (e) {
+    throw Exception('Erro ao buscar missões: $e');
+  }
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,7 +53,7 @@ class _MissoesGrupoScreenState extends State<MissoesGrupoScreen> {
               const SizedBox(height: 10),
               Divider(height: 1, color: Colors.grey[400]),
               const SizedBox(height: 20),
-              const MissoesWidget(),
+              MissoesWidget(groupId: widget.groupId),
             ],
           ),
         ),

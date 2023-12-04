@@ -1,49 +1,88 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
+import 'package:pi_app/app/models/missao_completada_model.dart';
+import 'package:pi_app/app/models/missao_model.dart';
 import 'package:pi_app/app/styles/styles.dart';
+import 'package:pi_app/services/missao_service.dart';
 
 class MissoesWidget extends StatefulWidget {
-  const MissoesWidget({super.key});
+  final String groupId;
+
+  const MissoesWidget({Key? key, required this.groupId}) : super(key: key);
 
   @override
   _MissoesWidgetState createState() => _MissoesWidgetState();
 }
 
 class _MissoesWidgetState extends State<MissoesWidget> {
-  bool _mostraCompletas = false;
-  bool _mostrarTodas = true;
-  final List<Map<String, dynamic>> missoes = [
-    {
-      "dificuldade": "fácil",
-      "esporte": "basquete",
-      "pontos": 8,
-      "nome": "Missão de Basquete",
-      "descricao":
-          "Esta é uma missão fácil de basquete. O objetivo é fazer cestas de 2 pontos.",
-      "completa": false,
-      "expanded": false,
-    },
-    {
-      "dificuldade": "médio",
-      "esporte": "futebol",
-      "pontos": 16,
-      "nome": "Desafio de Futebol",
-      "descricao":
-          "Esta é uma missão de dificuldade média de futebol. O objetivo é marcar gols e evitar que o adversário marque.",
-      "completa": false,
-      "expanded": false,
-    },
-    {
-      "dificuldade": "difícil",
-      "esporte": "tênis",
-      "pontos": 32,
-      "nome": "Torneio de Tênis",
-      "descricao":
-          "Esta é uma missão difícil de tênis. O objetivo é vencer um torneio de tênis contra adversários de alto nível.",
-      "completa": false,
-      "expanded": false,
+  final MissoesService _missoesService = MissoesService();
+  List<Missao> _missoes = [];
+  List<String> _idsMissoesCompletadas = [];
+
+  Future<List<Map<String, dynamic>>> fetchMissions() async {
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('Missoes').get();
+      return querySnapshot.docs
+          .map((doc) => doc.data() as Map<String, dynamic>)
+          .toList();
+    } catch (e) {
+      throw Exception('Erro ao buscar missões: $e');
     }
-  ];
+  }
+
+  Future<void> completarMissao(
+      String missaoId, String grupoId, String userId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .collection(' ')
+          .add({
+        'missaoId': missaoId,
+        'grupoId': grupoId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Erro ao salvar missão completa: $e');
+    }
+  }
+
+
+  Future<void> _fetchTodasMissoes() async {
+  // Obter o ID do usuário atual de alguma forma. Por exemplo, usando um provedor de autenticação.
+  String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
+  try {
+    // Buscar todas as missões
+    List<Missao> allMissoes = await _missoesService.fetchMissoes();
+    // Buscar as IDs das missões completadas pelo usuário
+    List<MissaoCompletada> completedMissoes = await _missoesService.fetchMissoesCompletadas(currentUserId);
+
+    // Criar uma lista somente com as IDs das missões completadas
+    List<String> completedIds = completedMissoes.map((missao) => missao.idMissao).toList();
+
+    // Atualizar o estado
+    setState(() {
+      _missoes = allMissoes;
+      _idsMissoesCompletadas = completedIds;
+    });
+  } catch (e) {
+    // Tratar erros, por exemplo, mostrando um Snackbar com uma mensagem
+    print("deu merda: $e");
+  }
+}
+
+
+
+
+@override
+  void initState() {
+    super.initState();
+    _fetchTodasMissoes();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -60,16 +99,17 @@ class _MissoesWidgetState extends State<MissoesWidget> {
         const BarraPesquisa(hintText: 'pesquisar'),
         _buildFilterChips(),
         const SizedBox(height: 20),
-        ...missoes.map(_buildMissaoCard).toList(),
+        ..._missoes.map(_buildMissaoCard).toList(),
       ],
     );
   }
 
-  Widget _buildMissaoCard(Map<String, dynamic> missao) {
-    double opacity = missao["completa"] ? 0.5 : 1.0;
+  Widget _buildMissaoCard(Missao missao) {
+    bool completa = _idsMissoesCompletadas.contains(missao.id) ?? false;
+    double opacity = completa ? 0.5 : 1.0;
 
     return Card(
-      color: missao["completa"]
+      color: completa
           ? const Color.fromARGB(255, 66, 66, 66).withOpacity(0.5)
           : Colors.grey[800],
       child: Theme(
@@ -78,10 +118,10 @@ class _MissoesWidgetState extends State<MissoesWidget> {
           tilePadding: const EdgeInsets.only(top: 12, bottom: 12, left: 24),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           childrenPadding: const EdgeInsets.symmetric(horizontal: 24),
-          initiallyExpanded: missao["expanded"],
+          initiallyExpanded: missao.expanded,
           onExpansionChanged: (bool expanded) {
             setState(() {
-              missao["expanded"] = expanded;
+              missao.expanded;
             });
           },
           title: Opacity(
@@ -92,12 +132,12 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildDificuldadeEsporteRow(
-                      missao["dificuldade"], missao["esporte"]),
+                      missao.nivelMissao, missao.esporte),
                   const Spacer(),
                   Text(
-                      missao["completa"]
-                          ? '${missao["pontos"]} pts'
-                          : '+ ${missao["pontos"]} pts',
+                      completa
+                          ? '${missao.pontos} pts'
+                          : '+ ${missao.pontos} pts',
                       style: Styles.textoDestacado),
                 ],
               ),
@@ -110,10 +150,10 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                 Container(
                   width: 50,
                   height: 50,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage('https://via.placeholder.com/150'),
+                      image: NetworkImage(missao.iconeEsporte),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -124,19 +164,19 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        missao["nome"],
+                        missao.nome,
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'Inter',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          decoration: missao["completa"]
+                          decoration: completa
                               ? TextDecoration.lineThrough
                               : null,
                         ),
                       ),
                       Icon(
-                        missao["expanded"]
+                        missao.expanded
                             ? Icons.keyboard_arrow_up
                             : Icons.keyboard_arrow_down,
                         color: Colors.white,
@@ -155,8 +195,8 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                 padding:
                     const EdgeInsets.only(left: 10, right: 10, bottom: 12.0),
                 child: Text(
-                  missao["descricao"],
-                  textAlign: TextAlign.justify,
+                  missao.descricao,
+                  textAlign: TextAlign.left,
                   style: Styles.texto.copyWith(height: 1.5),
                 ),
               ),
@@ -168,32 +208,32 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                 child: ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      if (missao["completa"]) {
-                        missao["completa"] = false;
+                      if (completa) {
+                        completa = false;
                         _mostrarNotificacao(
-                            missao["nome"], missao["pontos"], false);
+                            missao.nome, missao.pontos, false);
                       } else {
-                        missao["completa"] = true;
+                        completa = true;
                         _mostrarNotificacao(
-                            missao["nome"], missao["pontos"], true);
+                            missao.nome, missao.pontos, true);
                       }
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: missao["completa"]
+                    backgroundColor: completa
                         ? const Color.fromARGB(255, 66, 66, 66).withOpacity(0.5)
                         : Styles.corPrincipal,
-                    side: missao["completa"]
+                    side: completa
                         ? const BorderSide(
                             color: Color.fromARGB(255, 239, 83, 80), width: 2)
                         : BorderSide.none,
                     // A borda aparece quando a missão estiver completa
                   ),
                   child: Text(
-                    missao["completa"] ? 'Cancelar' : 'Completar',
+                    completa ? 'Cancelar' : 'Completar',
                     style: TextStyle(
                       color:
-                          missao["completa"] ? Colors.red[400] : Colors.white,
+                          completa ? Colors.red[400] : Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -249,7 +289,7 @@ class _MissoesWidgetState extends State<MissoesWidget> {
     switch (dificuldade.toLowerCase()) {
       case "fácil":
         return Styles.corFacil;
-      case "médio":
+      case "média":
         return Styles.corMedio;
       case "difícil":
         return Styles.corDificil;
@@ -259,100 +299,100 @@ class _MissoesWidgetState extends State<MissoesWidget> {
   }
 
   Widget _buildFilterChips() {
-    return SizedBox(
-      child: 
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ChoiceChip(
-              label: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0),
-                child: Text('Todas',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter')),
-              ),
-              selected: _mostrarTodas,
-              onSelected: (bool selected) {
-                setState(() {
-                  if (selected) {
-                    _mostrarTodas = true;
-                    _mostraCompletas = false; // Desativa os outros filtros
-                  }
-                });
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              selectedColor: Colors.grey[900],
-              disabledColor: Colors.grey,
-              avatar: const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(Icons.all_inclusive),
-              ),
-            ),
-            SizedBox(width: 8),
-            ChoiceChip(
-              label: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0),
-                child: Text('Completas',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter')),
-              ),
-              selected: !_mostrarTodas && _mostraCompletas,
-              onSelected: (bool selected) {
-                setState(() {
-                  _mostrarTodas = false;
-                  _mostraCompletas = selected;
-                });
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              selectedColor: Styles.corPrincipal,
-              disabledColor: Colors.grey,
-              avatar: const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(Icons.check),
-              ),
-            ),
-            SizedBox(width: 8),
-            ChoiceChip(
-              label: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0),
-                child: Text('Incompletas',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter')),
-              ),
-              selected: !_mostrarTodas && !_mostraCompletas,
-              onSelected: (bool selected) {
-                setState(() {
-                  _mostrarTodas = false;
-                  _mostraCompletas = !selected;
-                });
-              },
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              selectedColor: Colors.red[400],
-              disabledColor: Colors.grey,
-              avatar: const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Icon(Icons.close),
-              ),
-            ),
-            // Adicione outros filtros se necessário
-          ],
-        ),
-      ),
-    );
+    return SizedBox();
+    // return SizedBox(
+    //   child: SingleChildScrollView(
+    //     scrollDirection: Axis.horizontal,
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.start,
+    //       children: [
+    //         ChoiceChip(
+    //           label: const Padding(
+    //             padding: EdgeInsets.symmetric(horizontal: 0),
+    //             child: Text('Todas',
+    //                 style: TextStyle(
+    //                     fontSize: 13,
+    //                     fontWeight: FontWeight.bold,
+    //                     fontFamily: 'Inter')),
+    //           ),
+    //           selected: _mostrarTodas,
+    //           onSelected: (bool selected) {
+    //             setState(() {
+    //               if (selected) {
+    //                 _mostrarTodas = true;
+    //                 _mostraCompletas = false; // Desativa os outros filtros
+    //               }
+    //             });
+    //           },
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(5),
+    //           ),
+    //           selectedColor: Colors.grey[900],
+    //           disabledColor: Colors.grey,
+    //           avatar: const Padding(
+    //             padding: EdgeInsets.only(left: 8.0),
+    //             child: Icon(Icons.all_inclusive),
+    //           ),
+    //         ),
+    //         SizedBox(width: 8),
+    //         ChoiceChip(
+    //           label: const Padding(
+    //             padding: EdgeInsets.symmetric(horizontal: 0),
+    //             child: Text('Completas',
+    //                 style: TextStyle(
+    //                     fontSize: 13,
+    //                     fontWeight: FontWeight.bold,
+    //                     fontFamily: 'Inter')),
+    //           ),
+    //           selected: !_mostrarTodas && _mostraCompletas,
+    //           onSelected: (bool selected) {
+    //             setState(() {
+    //               _mostrarTodas = false;
+    //               _mostraCompletas = selected;
+    //             });
+    //           },
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(5),
+    //           ),
+    //           selectedColor: Styles.corPrincipal,
+    //           disabledColor: Colors.grey,
+    //           avatar: const Padding(
+    //             padding: EdgeInsets.only(left: 8.0),
+    //             child: Icon(Icons.check),
+    //           ),
+    //         ),
+    //         SizedBox(width: 8),
+    //         ChoiceChip(
+    //           label: const Padding(
+    //             padding: EdgeInsets.symmetric(horizontal: 0),
+    //             child: Text('Incompletas',
+    //                 style: TextStyle(
+    //                     fontSize: 13,
+    //                     fontWeight: FontWeight.bold,
+    //                     fontFamily: 'Inter')),
+    //           ),
+    //           selected: !_mostrarTodas && !_mostraCompletas,
+    //           onSelected: (bool selected) {
+    //             setState(() {
+    //               _mostrarTodas = false;
+    //               _mostraCompletas = !selected;
+    //             });
+    //           },
+    //           shape: RoundedRectangleBorder(
+    //             borderRadius: BorderRadius.circular(5),
+    //           ),
+    //           selectedColor: Colors.red[400],
+    //           disabledColor: Colors.grey,
+    //           avatar: const Padding(
+    //             padding: EdgeInsets.only(left: 8.0),
+    //             child: Icon(Icons.close),
+    //           ),
+    //         ),
+    //         // Adicione outros filtros se necessário
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   void _mostrarNotificacao(String nomeMissao, int pontos, bool completa) {

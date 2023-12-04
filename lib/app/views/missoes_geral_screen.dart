@@ -4,7 +4,9 @@ import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/ranking_screen.dart';
 
 class MissoesGeralScreen extends StatefulWidget {
-  const MissoesGeralScreen({Key? key}) : super(key: key);
+  final String? groupId;
+
+  const MissoesGeralScreen({Key? key, this.groupId}) : super(key: key);
 
   @override
   _MissoesGeralScreenState createState() => _MissoesGeralScreenState();
@@ -92,7 +94,7 @@ class _MissoesGeralScreenState extends State<MissoesGeralScreen> {
               const SizedBox(height: 10),
               Divider(height: 1, color: Colors.grey[400]),
               const SizedBox(height: 20),
-              const MissoesWidget(),
+              MissoesWidget(groupId: widget.groupId!),
             ],
           ),
         ),
