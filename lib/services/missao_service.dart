@@ -39,4 +39,47 @@ class MissoesService {
       throw Exception('Erro ao buscar missões completadas: $e');
     }
   }
+
+
+  Future<List<MissaoCompletada>> fetchMissoesCompletadasPorGrupo(String userId, String groupId) async {
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(userId)
+        .collection('MissoesCompletadas')
+        .where('grupoId', isEqualTo: groupId)
+        .get();
+
+    List<MissaoCompletada> missoesCompletadas = [];
+    for (var doc in querySnapshot.docs) {
+      // Aqui você precisa obter o objeto Missao correspondente ao missaoId
+      // Supondo que você tenha uma função para buscar uma Missao pelo ID
+      String missaoId = doc['missaoId'];
+      Missao missao = await fetchMissaoById(missaoId);
+
+      // Cria uma instância de MissaoCompletada usando o documento e a Missao
+      missoesCompletadas.add(MissaoCompletada.fromDocument(doc, missao));
+    }
+    return missoesCompletadas;
+  } catch (e) {
+    throw Exception('Erro ao buscar missões completadas: $e');
+  }
+}
+
+
+
+Future<Missao> fetchMissaoById(String missaoId) async {
+    try {
+      DocumentSnapshot doc = await _firestore.collection('Missoes').doc(missaoId).get();
+
+      if (!doc.exists) {
+        throw Exception("Missão não encontrada.");
+      }
+
+      // Supondo que a classe Missao tenha um construtor nomeado fromMap
+      return Missao.fromMap(doc.data() as Map<String, dynamic>, doc.id);
+    } catch (e) {
+      throw Exception('Erro ao buscar a missão: $e');
+    }
+  }
 }

@@ -61,16 +61,6 @@ class GroupService {
     return Group.fromDocument(groupDoc);
   }
 
-  // Future<List<User>> getGroupMembers(List<String> memberIds) async {
-  //   List<User> members = [];
-  //   for (String memberId in memberIds) {
-  //     DocumentSnapshot userDoc = await _firestore.collection('Users').doc(memberId).get();
-  //     if (userDoc.exists) {
-  //       members.add(User.fromDocument(userDoc));
-  //     }
-  //   }
-  //   return members;
-  // }
 
   Future<List<User>> getGroupMembers(Group group) async {
     List<User> members = [];

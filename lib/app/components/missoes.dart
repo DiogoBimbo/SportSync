@@ -20,6 +20,8 @@ class _MissoesWidgetState extends State<MissoesWidget> {
   final MissoesService _missoesService = MissoesService();
   List<Missao> _missoes = [];
   List<String> _idsMissoesCompletadas = [];
+  Set<String> _tempCompletedMissions = {};
+  bool isLoading = true;
 
   Future<List<Map<String, dynamic>>> fetchMissions() async {
     try {
@@ -33,13 +35,13 @@ class _MissoesWidgetState extends State<MissoesWidget> {
     }
   }
 
-  Future<void> completarMissao(
-      String missaoId, String grupoId, String userId) async {
+  Future<void> completarMissao(String missaoId, String grupoId) async {
+    String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
     try {
       await FirebaseFirestore.instance
           .collection('Users')
-          .doc(userId)
-          .collection(' ')
+          .doc(currentUserId)
+          .collection('MissoesCompletadas')
           .add({
         'missaoId': missaoId,
         'grupoId': grupoId,
@@ -50,15 +52,45 @@ class _MissoesWidgetState extends State<MissoesWidget> {
     }
   }
 
+  Future<void> cancelarMissaoCompletada(String missaoId, String grupoId) async {
+    String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    try {
+      // Referência à subcoleção de missões completadas do usuário
+      var missoesCompletadasRef = FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUserId)
+          .collection('MissoesCompletadas');
+
+      // Encontre o documento com o 'missaoId' e 'grupoId' correspondentes
+      var querySnapshot = await missoesCompletadasRef
+          .where('missaoId', isEqualTo: missaoId)
+          .where('grupoId', isEqualTo: grupoId)
+          .get();
+
+      // Se o documento existir, exclua-o
+      for (var doc in querySnapshot.docs) {
+        await missoesCompletadasRef.doc(doc.id).delete();
+      }
+
+      // Remover o ID da missão das missões completadas temporariamente armazenadas
+      _tempCompletedMissions.remove(missaoId);
+
+      // Atualizar o estado da aplicação
+      setState(() {});
+    } catch (e) {
+      print('Erro ao cancelar missão completada: $e');
+      // Tratamento de erros, como mostrar um SnackBar
+    }
+  }
 
   Future<void> _fetchTodasMissoes() async {
-  // Obter o ID do usuário atual de alguma forma. Por exemplo, usando um provedor de autenticação.
   String currentUserId = FirebaseAuth.instance.currentUser?.uid ?? '';
   try {
     // Buscar todas as missões
     List<Missao> allMissoes = await _missoesService.fetchMissoes();
-    // Buscar as IDs das missões completadas pelo usuário
-    List<MissaoCompletada> completedMissoes = await _missoesService.fetchMissoesCompletadas(currentUserId);
+
+    // Buscar as missões completadas pelo usuário que correspondem ao groupId
+    List<MissaoCompletada> completedMissoes = await _missoesService.fetchMissoesCompletadasPorGrupo(currentUserId, widget.groupId);
 
     // Criar uma lista somente com as IDs das missões completadas
     List<String> completedIds = completedMissoes.map((missao) => missao.idMissao).toList();
@@ -67,22 +99,37 @@ class _MissoesWidgetState extends State<MissoesWidget> {
     setState(() {
       _missoes = allMissoes;
       _idsMissoesCompletadas = completedIds;
+      isLoading = false;
     });
   } catch (e) {
-    // Tratar erros, por exemplo, mostrando um Snackbar com uma mensagem
-    print("deu merda: $e");
+    print("Erro ao buscar missões: $e");
+    // Tratamento de erro
   }
 }
 
 
+  void _toggleMissionState(String missaoId, bool isCompleted) {
+    setState(() {
+      if (isCompleted) {
+        _tempCompletedMissions.add(missaoId);
+      } else {
+        _tempCompletedMissions.remove(missaoId);
+      }
+    });
+  }
 
 
-@override
+  void reloadPageData() {
+    // Esta função é chamada para recarregar os dados da página.
+    _fetchTodasMissoes();
+  }
+
+
+  @override
   void initState() {
     super.initState();
     _fetchTodasMissoes();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +139,10 @@ class _MissoesWidgetState extends State<MissoesWidget> {
   }
 
   Widget _buildMissoesSection() {
+    if (isLoading) {
+      // Mostra o indicador de carregamento enquanto as missões estão sendo carregadas
+      return const Center(child: CircularProgressIndicator());
+    }
     return Column(
       children: [
         const Text('MISSÕES', style: Styles.titulo),
@@ -105,7 +156,8 @@ class _MissoesWidgetState extends State<MissoesWidget> {
   }
 
   Widget _buildMissaoCard(Missao missao) {
-    bool completa = _idsMissoesCompletadas.contains(missao.id) ?? false;
+    bool completa = _idsMissoesCompletadas.contains(missao.id) ||
+        _tempCompletedMissions.contains(missao.id);
     double opacity = completa ? 0.5 : 1.0;
 
     return Card(
@@ -170,9 +222,8 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                           fontFamily: 'Inter',
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          decoration: completa
-                              ? TextDecoration.lineThrough
-                              : null,
+                          decoration:
+                              completa ? TextDecoration.lineThrough : null,
                         ),
                       ),
                       Icon(
@@ -207,17 +258,26 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                 width: 120,
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      if (completa) {
-                        completa = false;
-                        _mostrarNotificacao(
-                            missao.nome, missao.pontos, false);
-                      } else {
-                        completa = true;
-                        _mostrarNotificacao(
-                            missao.nome, missao.pontos, true);
-                      }
-                    });
+                    bool isCurrentlyCompleted =
+                        _idsMissoesCompletadas.contains(missao.id) ||
+                            _tempCompletedMissions.contains(missao.id);
+
+                    if (isCurrentlyCompleted) {
+                      // Cancela a missão completada
+                      cancelarMissaoCompletada(missao.id, widget.groupId);
+                      _toggleMissionState(missao.id,
+                          false); 
+                      reloadPageData();
+                    } else {
+                      // Lógica para completar a missão
+                      completarMissao(missao.id, widget.groupId);
+                      _toggleMissionState(
+                          missao.id, true);
+                      reloadPageData();
+                    }
+
+                    _mostrarNotificacao(
+                        missao.nome, missao.pontos, !isCurrentlyCompleted);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: completa
@@ -227,13 +287,11 @@ class _MissoesWidgetState extends State<MissoesWidget> {
                         ? const BorderSide(
                             color: Color.fromARGB(255, 239, 83, 80), width: 2)
                         : BorderSide.none,
-                    // A borda aparece quando a missão estiver completa
                   ),
                   child: Text(
                     completa ? 'Cancelar' : 'Completar',
                     style: TextStyle(
-                      color:
-                          completa ? Colors.red[400] : Colors.white,
+                      color: completa ? Colors.red[400] : Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -426,7 +484,7 @@ class _MissoesWidgetState extends State<MissoesWidget> {
           ],
         ),
       ),
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackbar);
