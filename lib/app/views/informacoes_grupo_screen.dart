@@ -8,6 +8,7 @@ import 'package:pi_app/app/models/users.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/adicionar_participante_grupo.dart';
 import 'package:pi_app/app/views/editar_informacoes_grupo_screen.dart';
+import 'package:pi_app/app/views/geral_screen.dart';
 import 'package:pi_app/services/group_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
@@ -29,13 +30,24 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
   bool isLoading = true;
   late List<User> members = [];
   bool isCurrentUserAdmin = false;
-  
 
   void reloadPageData() {
-    // Esta função é chamada para recarregar os dados da página.
-    fetchGroupInfo();
-  }
+    setState(() {
+      isLoading = true;
+      members.clear(); // Limpar a lista de membros
+    });
 
+    fetchGroupInfo().then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    }).catchError((error) {
+      print('Erro ao recarregar dados: $error');
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
 
   Future<void> fetchGroupInfo() async {
     GroupService groupService = GroupService();
@@ -76,53 +88,140 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
     fetchGroupInfo();
   }
 
-void adicionarParticipante() {
-    Navigator.of(context).push(MaterialPageRoute(
+  void adicionarParticipante() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
       builder: (context) => AdicionarPScreen(
         groupId: widget.groupId,
         existingMemberIds: members.map((member) => member.id).toList(),
       ),
-    )).then((_) {
-    // Recarrega os dados da tela ao retornar
-    reloadPageData();
-  });
+    ))
+        .then((result) {
+      if (result == true) {
+        reloadPageData();
+      }
+    });
   }
 
   Future<void> removerMembroDoGrupo(String userId) async {
-  // Referência para o documento do grupo no Firestore
-  DocumentReference groupDocRef =
-      FirebaseFirestore.instance.collection('Groups').doc(widget.groupId);
+    // Referência para o documento do grupo no Firestore
+    DocumentReference groupDocRef =
+        FirebaseFirestore.instance.collection('Groups').doc(widget.groupId);
 
-  try {
-    // Atualização atomica para garantir a integridade dos dados
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot groupSnapshot = await transaction.get(groupDocRef);
+    try {
+      // Atualização atomica para garantir a integridade dos dados
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot groupSnapshot = await transaction.get(groupDocRef);
 
-      if (groupSnapshot.exists) {
-        Map<String, dynamic> groupData = groupSnapshot.data() as Map<String, dynamic>;
+        if (groupSnapshot.exists) {
+          Map<String, dynamic> groupData =
+              groupSnapshot.data() as Map<String, dynamic>;
 
-        if (groupData['membersWithStatus'] != null && groupData['membersWithStatus'][userId] != null) {
-          // Remove o usuário do mapa de membros
-          Map<String, String> updatedMembersWithStatus = Map<String, String>.from(groupData['membersWithStatus']);
-          updatedMembersWithStatus.remove(userId);
+          if (groupData['membersWithStatus'] != null &&
+              groupData['membersWithStatus'][userId] != null) {
+            // Remove o usuário do mapa de membros
+            Map<String, String> updatedMembersWithStatus =
+                Map<String, String>.from(groupData['membersWithStatus']);
+            updatedMembersWithStatus.remove(userId);
 
-          // Atualiza o documento do grupo com o novo mapa de membros
-          transaction.update(groupDocRef, {'membersWithStatus': updatedMembersWithStatus});
+            // Atualiza o documento do grupo com o novo mapa de membros
+            transaction.update(
+                groupDocRef, {'membersWithStatus': updatedMembersWithStatus});
+
+            // Indicar sucesso ao usuário
+            // Bota um snackbar ai pfvr 🥺🥺 (snackbarcustom)
+          }
+        }
+      }).then((_) {
+        // Recarrega os dados da tela ao retornar
+        reloadPageData();
+      });
+    } catch (e) {
+      // Se algo der errado, mostre uma mensagem de erro
+      print('deu merda: $e');
+    }
+  }
+
+  Future<void> sairDoGrupo() async {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+    DocumentReference groupDocRef =
+        FirebaseFirestore.instance.collection('Groups').doc(widget.groupId);
+
+    try {
+      FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot groupSnapshot = await transaction.get(groupDocRef);
+
+        if (groupSnapshot.exists) {
+          Map<String, dynamic> groupData =
+              groupSnapshot.data() as Map<String, dynamic>;
+          Map<String, String> membersWithStatus =
+              Map<String, String>.from(groupData['membersWithStatus']);
+
+          // Verifica se o usuário atual é o administrador
+          if (groupData['admin'] == currentUserId) {
+            membersWithStatus.remove(currentUserId);
+
+            // Escolha um novo administrador se houver membros restantes
+            if (membersWithStatus.isNotEmpty) {
+              String newAdminId = membersWithStatus.keys.first;
+              transaction.update(groupDocRef, {
+                'admin': newAdminId,
+                'membersWithStatus': membersWithStatus
+              });
+            } else {
+              // Se não houver mais membros, apague o grupo
+              transaction.delete(groupDocRef);
+            }
+          } else {
+            // Simplesmente remove o usuário se ele não for o administrador
+            membersWithStatus.remove(currentUserId);
+            transaction
+                .update(groupDocRef, {'membersWithStatus': membersWithStatus});
+          }
 
           // Indicar sucesso ao usuário
           // Bota um snackbar ai pfvr 🥺🥺 (snackbarcustom)
         }
-      }
-    });
-  } catch (e) {
-    // Se algo der errado, mostre uma mensagem de erro
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Erro ao remover membro: $e'),
-      ),
-    );
+      }).then((_) {
+        // Navegar de volta para a GruposScreen
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const GeralScreen()));
+      });
+    } catch (e) {
+      print('Erro ao sair do grupo: $e');
+      // Mostrar mensagem de erro
+    }
   }
-}
+
+  Future<void> excluirGrupo() async {
+    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+    DocumentReference groupDocRef =
+        FirebaseFirestore.instance.collection('Groups').doc(widget.groupId);
+
+    try {
+      DocumentSnapshot groupSnapshot = await groupDocRef.get();
+
+      if (groupSnapshot.exists) {
+        Map<String, dynamic> groupData =
+            groupSnapshot.data() as Map<String, dynamic>;
+
+        // Verifica se o usuário atual é o administrador
+
+        // Exclui o grupo do Firestore
+        await groupDocRef.delete();
+
+        // Redireciona para a tela de grupos ou tela inicial
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const GeralScreen()));
+
+        // Indicar sucesso ao usuário
+        // Bota um snackbar ai pfvr 🥺🥺 (snackbarcustom)
+      }
+    } catch (e) {
+      print('Erro ao excluir grupo: $e');
+      // Mostrar mensagem de erro
+    }
+  }
 
   void _desejaRemoverDoGrupo(String participante) {
     showDialog(
@@ -166,7 +265,7 @@ void adicionarParticipante() {
           confirmButtonText: 'Sair',
           cancelButtonText: 'Cancelar',
           onConfirm: () {
-            // implementar a ação de sair do grupo
+            sairDoGrupo();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -208,7 +307,8 @@ void adicionarParticipante() {
           confirmButtonText: 'Apagar',
           cancelButtonText: 'Cancelar',
           onConfirm: () {
-            // implementar a ação de apagar o grupo
+            Navigator.of(context).pop();
+            excluirGrupo();
           },
           onCancel: () {
             Navigator.of(context).pop();
@@ -218,7 +318,6 @@ void adicionarParticipante() {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +336,7 @@ void adicionarParticipante() {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(limitarString(group.name, 18),
+                  Text(limitarString(group.name, 13),
                       style: Styles.tituloBarra),
                 ],
               ),
@@ -248,9 +347,12 @@ void adicionarParticipante() {
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const EditarGrupoScreen(),
-                  ));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => EditarGrupoScreen(groupId: widget.groupId, groupImage: group.imageUrl, groupName: group.name),
+                  )).then((_) {
+        // Recarrega os dados da tela ao retornar
+        reloadPageData();
+      });
                 },
               ),
           ],
@@ -321,7 +423,8 @@ void adicionarParticipante() {
                   itemCount: members.length,
                   itemBuilder: (context, index) {
                     User member = members[index];
-                    String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
+                    String currentUserId =
+                        auth.FirebaseAuth.instance.currentUser?.uid ?? '';
                     bool isCurrentUser = member.id == currentUserId;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12.0),
@@ -353,12 +456,14 @@ void adicionarParticipante() {
                             isCurrentUser ? 'Você' : member.name,
                             style: Styles.textoDestacado,
                           ),
-                          trailing: (isCurrentUserAdmin && !isCurrentUser) ? IconButton(
-          icon: const Icon(Icons.remove),
-          onPressed: () {
-            _desejaRemoverDoGrupo(member.id);
-          },
-        ) : null,
+                          trailing: (isCurrentUserAdmin && !isCurrentUser)
+                              ? IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () {
+                                    _desejaRemoverDoGrupo(member.id);
+                                  },
+                                )
+                              : null,
                         ),
                       ),
                     );
@@ -393,7 +498,7 @@ void adicionarParticipante() {
                         padding: const EdgeInsets.only(top: 2.0, left: 20.0),
                         child: TextButton(
                           onPressed: () {
-                            //_desejaApagarGrupo(nomeDoGrupo);
+                            _desejaApagarGrupo(group.name);
                           },
                           child: Row(
                             children: [

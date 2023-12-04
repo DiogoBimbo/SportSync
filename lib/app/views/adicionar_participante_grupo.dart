@@ -5,7 +5,6 @@ import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/models/users.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/components/barra_de_pesquisa.dart';
-import 'package:pi_app/app/views/informacoes_grupo_screen.dart';
 import 'package:pi_app/services/user_service.dart';
 
 class AdicionarPScreen extends StatefulWidget {
@@ -28,10 +27,10 @@ class _AdicionarPState extends State<AdicionarPScreen> {
   bool isLoading = true;
 
   @override
-void initState() {
-  super.initState();
-  _fetchUsers(); // Carrega todos os amigos primeiro
-}
+  void initState() {
+    super.initState();
+    _fetchUsers(); // Carrega todos os amigos primeiro
+  }
 
   void _fetchUsers() async {
   setState(() {
@@ -90,7 +89,8 @@ void initState() {
       });
 
       // Remova a tela atual da pilha de navegação para voltar à tela do grupo
-      Navigator.of(context).pop();
+      Navigator.pop(context, true); // 'true' indica que os membros foram adicionados
+
     } catch (e) {
       // Se algo der errado, mostre uma mensagem de erro
       ScaffoldMessenger.of(context).showSnackBar(
@@ -323,11 +323,7 @@ void initState() {
             ? null // Desativa o botão se não houver amigos selecionados
             : () {
                 _adicionarMembrosAoGrupoExistente();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => InformacoesGrupoScreen(groupId: widget.groupId),
-                  ),
-                );
+                Navigator.pop(context, true);
               },
         child: Icon(Icons.check,
             color: amigosSelecionados.isEmpty

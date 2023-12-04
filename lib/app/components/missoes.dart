@@ -260,93 +260,97 @@ class _MissoesWidgetState extends State<MissoesWidget> {
 
   Widget _buildFilterChips() {
     return SizedBox(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ChoiceChip(
-            label: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Text('Todas',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter')),
+      child: 
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ChoiceChip(
+              label: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                child: Text('Todas',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter')),
+              ),
+              selected: _mostrarTodas,
+              onSelected: (bool selected) {
+                setState(() {
+                  if (selected) {
+                    _mostrarTodas = true;
+                    _mostraCompletas = false; // Desativa os outros filtros
+                  }
+                });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              selectedColor: Colors.grey[900],
+              disabledColor: Colors.grey,
+              avatar: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Icon(Icons.all_inclusive),
+              ),
             ),
-            selected: _mostrarTodas,
-            onSelected: (bool selected) {
-              setState(() {
-                if (selected) {
-                  _mostrarTodas = true;
-                  _mostraCompletas = false; // Desativa os outros filtros
-                }
-              });
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
+            SizedBox(width: 8),
+            ChoiceChip(
+              label: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                child: Text('Completas',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter')),
+              ),
+              selected: !_mostrarTodas && _mostraCompletas,
+              onSelected: (bool selected) {
+                setState(() {
+                  _mostrarTodas = false;
+                  _mostraCompletas = selected;
+                });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              selectedColor: Styles.corPrincipal,
+              disabledColor: Colors.grey,
+              avatar: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Icon(Icons.check),
+              ),
             ),
-            selectedColor: Colors.grey[900],
-            disabledColor: Colors.grey,
-            avatar: const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Icon(Icons.all_inclusive),
+            SizedBox(width: 8),
+            ChoiceChip(
+              label: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 0),
+                child: Text('Incompletas',
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter')),
+              ),
+              selected: !_mostrarTodas && !_mostraCompletas,
+              onSelected: (bool selected) {
+                setState(() {
+                  _mostrarTodas = false;
+                  _mostraCompletas = !selected;
+                });
+              },
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              selectedColor: Colors.red[400],
+              disabledColor: Colors.grey,
+              avatar: const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Icon(Icons.close),
+              ),
             ),
-          ),
-          SizedBox(width: 8),
-          ChoiceChip(
-            label: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Text('Completas',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter')),
-            ),
-            selected: !_mostrarTodas && _mostraCompletas,
-            onSelected: (bool selected) {
-              setState(() {
-                _mostrarTodas = false;
-                _mostraCompletas = selected;
-              });
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            selectedColor: Styles.corPrincipal,
-            disabledColor: Colors.grey,
-            avatar: const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Icon(Icons.check),
-            ),
-          ),
-          SizedBox(width: 8),
-          ChoiceChip(
-            label: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0),
-              child: Text('Incompletas',
-                  style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter')),
-            ),
-            selected: !_mostrarTodas && !_mostraCompletas,
-            onSelected: (bool selected) {
-              setState(() {
-                _mostrarTodas = false;
-                _mostraCompletas = !selected;
-              });
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-            ),
-            selectedColor: Colors.red[400],
-            disabledColor: Colors.grey,
-            avatar: const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Icon(Icons.close),
-            ),
-          ),
-          // Adicione outros filtros se necessário
-        ],
+            // Adicione outros filtros se necessário
+          ],
+        ),
       ),
     );
   }

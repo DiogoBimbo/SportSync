@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
@@ -21,6 +22,33 @@ class ChatGrupoScreen extends StatefulWidget {
 }
 
 class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
+  String nomeDoGrupo = '';
+  String imagemDoGrupo = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchGroupInfo();
+  }
+
+  void fetchGroupInfo() async {
+    DocumentReference groupRef =
+        FirebaseFirestore.instance.collection('Groups').doc(widget.groupId);
+
+    groupRef.get().then((DocumentSnapshot snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        setState(() {
+          nomeDoGrupo = snapshot['name'] ?? '';
+          imagemDoGrupo = snapshot['imageUrl'] ?? '';
+        });
+      }
+    }).catchError((error) {
+      print('Erro ao buscar informações do grupo: $error');
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
