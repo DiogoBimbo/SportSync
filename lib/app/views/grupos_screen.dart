@@ -42,6 +42,16 @@ class _GruposScreenState extends State<GruposScreen> {
     }
   }
 
+
+  void _adicionarGrupo() {
+    setState(() {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const CriarGrupoPScreen(),
+      ));
+    });
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -177,14 +187,5 @@ class _GruposScreenState extends State<GruposScreen> {
         ),
       ),
     );
-  }
-
-
-  void _adicionarGrupo() {
-    setState(() {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const CriarGrupoPScreen(),
-      ));
-    });
   }
 }

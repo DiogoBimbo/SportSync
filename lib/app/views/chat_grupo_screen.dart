@@ -75,7 +75,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(limitarString(widget.nomeDoGrupo, 18),
+                    Text(limitarString(widget.nomeDoGrupo, 13),
                         style: Styles.tituloBarra),
                     const SizedBox(height: 1.0),
                     const Text('Toque para dados do grupo',

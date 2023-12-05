@@ -199,7 +199,7 @@ class _AmigosInicialState extends State<AmigosInicialScreen> {
                       // Opcional: Navegar para outra tela após enviar as solicitações
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => const GeralScreen()),
+                            builder: (context) => GeralScreen()),
                       );
                     },
                     child: const Padding(

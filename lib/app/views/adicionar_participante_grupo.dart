@@ -21,6 +21,7 @@ class AdicionarPScreen extends StatefulWidget {
 }
 
 class _AdicionarPState extends State<AdicionarPScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final UserService _userService = UserService();
   List<User> todosAmigos = [];
   List<User> amigosSelecionados = [];
@@ -36,7 +37,7 @@ class _AdicionarPState extends State<AdicionarPScreen> {
   setState(() {
     isLoading = true;
   });
-  try {
+    try {
     String currentUserId = auth.FirebaseAuth.instance.currentUser?.uid ?? '';
     List<User> usersList = await _userService.fetchUsers();
     List<String> friendIds = await _userService.fetchUserFriends(currentUserId);
@@ -45,13 +46,30 @@ class _AdicionarPState extends State<AdicionarPScreen> {
     List<User> allFriends = usersList.where((user) => friendIds.contains(user.id)).toList();
 
     _fetchExistingGroupMembers(allFriends); // Passa todos os amigos para a função de filtragem
-  } catch (e) {
-    print(e);
-    setState(() {
-      isLoading = false;
-    });
+    } catch (e) {
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
+
+
+  Future<void> addMemberToRanking(String groupId, String memberId) async {
+  DocumentReference rankingDocRef = _firestore
+      .collection('Groups')
+      .doc(groupId)
+      .collection('Ranking')
+      .doc(memberId);
+
+  return rankingDocRef.set({
+    'userId': memberId,
+    'points': 0, // Pontuação inicial
+    'lastUpdated': FieldValue.serverTimestamp(),
+  });
 }
+
+
 
   void _adicionarMembrosAoGrupoExistente() async {
     // Atualize a lista de membros do grupo no Firestore
@@ -60,9 +78,10 @@ class _AdicionarPState extends State<AdicionarPScreen> {
       Map<String, String> newMembersWithStatus = {};
       for (var user in amigosSelecionados) {
         // Inclua apenas os novos membros que ainda não estão no grupo
-        if (!widget.existingMemberIds!.contains(user.id)) {
+        if (!widget.existingMemberIds.contains(user.id)) {
           newMembersWithStatus[user.id] =
               'normal'; // Ou outro status apropriado
+          await addMemberToRanking(widget.groupId, user.id);
         }
       }
 

@@ -22,7 +22,7 @@ class _AuthCheckState extends State<AuthCheck>{
     } else if (auth.usuario == null) {
       return const HomePage();
     } else {
-      return const GeralScreen();
+      return GeralScreen();
     }
   }
 

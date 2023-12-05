@@ -26,7 +26,6 @@ class MissoesService {
 
       for (var doc in missoesCompletadasSnapshot.docs) {
         String idMissao = doc['missaoId'];
-        String idGrupo = doc['grupoId'];
 
         DocumentSnapshot missaoDoc = await _firestore.collection('Missoes').doc(idMissao).get();
         Missao missao = Missao.fromMap(missaoDoc.data() as Map<String, dynamic>, missaoDoc.id);

@@ -42,38 +42,52 @@ class GroupService {
 
     DocumentReference groupDocRef = _firestore.collection('Groups').doc();
 
-    await groupDocRef.set({
-      'name': name,
-      'admin': adminUser.uid,
-      'membersWithStatus': membersWithStatus,
-      'imageUrl': null, // inicialmente, a URL da imagem é nula
-      'createdAt': FieldValue.serverTimestamp(),
-    });
+    return _firestore.runTransaction((transaction) async {
+      // Cria o grupo
+      transaction.set(groupDocRef, {
+        'name': name,
+        'admin': adminUser.uid,
+        'membersWithStatus': membersWithStatus,
+        'imageUrl': null, // inicialmente, a URL da imagem é nula
+        'createdAt': FieldValue.serverTimestamp(),
+      });
 
-    return groupDocRef; // Retorna a referência do documento criado
+      // Para cada membro, criar um registro de ranking com pontuação zero
+      for (var member in members) {
+        DocumentReference rankingDocRef =
+            groupDocRef.collection('Ranking').doc(member.id);
+        transaction.set(rankingDocRef, {
+          'userId': member.id,
+          'points': 0,
+          'lastUpdated': FieldValue.serverTimestamp(),
+        });
+      }
+
+      return groupDocRef;
+    });
   }
 
   Future<Group> getGroupById(String groupId) async {
-    DocumentSnapshot groupDoc = await _firestore.collection('Groups').doc(groupId).get();
+    DocumentSnapshot groupDoc =
+        await _firestore.collection('Groups').doc(groupId).get();
     if (!groupDoc.exists) {
       throw Exception('Grupo não encontrado');
     }
     return Group.fromDocument(groupDoc);
   }
 
-
   Future<List<User>> getGroupMembers(Group group) async {
     List<User> members = [];
     // Obtenha a lista de IDs dos membros do mapa 'membersWithStatus'
     List<String> memberIds = group.membersWithStatus.keys.toList();
-    
+
     for (String memberId in memberIds) {
-      DocumentSnapshot userDoc = await _firestore.collection('Users').doc(memberId).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('Users').doc(memberId).get();
       if (userDoc.exists) {
         members.add(User.fromDocument(userDoc));
       }
     }
     return members;
   }
-  
 }

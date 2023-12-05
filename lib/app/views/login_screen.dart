@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 MaterialPageRoute(
                   builder: (BuildContext context) => isSigningUp
                       ? const AmigosInicialScreen()
-                      : const GeralScreen(),
+                      : GeralScreen(),
                 ),
                 (route) => false,
               );

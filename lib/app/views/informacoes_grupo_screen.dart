@@ -25,6 +25,7 @@ class InformacoesGrupoScreen extends StatefulWidget {
 }
 
 class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   TextEditingController pesquisaController = TextEditingController();
   late Group group; // Informação do grupo
   bool isLoading = true;
@@ -103,6 +104,19 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
     });
   }
 
+
+  Future<void> removeMemberFromRanking(String groupId, String memberId) async {
+  DocumentReference rankingDocRef = _firestore
+      .collection('Groups')
+      .doc(groupId)
+      .collection('Ranking')
+      .doc(memberId);
+
+  return rankingDocRef.delete();
+}
+
+
+
   Future<void> removerMembroDoGrupo(String userId) async {
     // Referência para o documento do grupo no Firestore
     DocumentReference groupDocRef =
@@ -127,6 +141,10 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
             // Atualiza o documento do grupo com o novo mapa de membros
             transaction.update(
                 groupDocRef, {'membersWithStatus': updatedMembersWithStatus});
+
+            // Remove o membro do ranking do grupo
+            await removeMemberFromRanking(widget.groupId, userId);
+
 
             // Indicar sucesso ao usuário
             // Bota um snackbar ai pfvr 🥺🥺 (snackbarcustom)
@@ -185,7 +203,7 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
       }).then((_) {
         // Navegar de volta para a GruposScreen
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const GeralScreen()));
+            .push(MaterialPageRoute(builder: (context) => GeralScreen()));
       });
     } catch (e) {
       print('Erro ao sair do grupo: $e');
@@ -212,7 +230,7 @@ class _InformacoesGrupoScreenState extends State<InformacoesGrupoScreen> {
 
         // Redireciona para a tela de grupos ou tela inicial
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => const GeralScreen()));
+            .push(MaterialPageRoute(builder: (context) => GeralScreen()));
 
         // Indicar sucesso ao usuário
         // Bota um snackbar ai pfvr 🥺🥺 (snackbarcustom)

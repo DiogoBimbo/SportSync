@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pi_app/app/styles/styles.dart';
-import 'package:pi_app/app/views/chat_grupo_screen.dart';
 import 'package:pi_app/services/group_service.dart';
 
 class EditarGrupoScreen extends StatefulWidget {
@@ -38,44 +37,46 @@ class _EditarGrupoScreenState extends State<EditarGrupoScreen> {
     }
   }
 
-
   Future<void> atualizarDadosDoGrupo() async {
-  String nomeDoGrupo = nomeGrupoController.text.trim();
+    String nomeDoGrupo = nomeGrupoController.text.trim();
 
-  if (nomeDoGrupo.isEmpty) {
-    // Mostrar erro se o nome do grupo estiver vazio
-    return;
-  }
-
-  String? imageUrl = widget.groupImage; // Começa com a imagem atual do grupo
-
-  try {
-    if (imagemDoGrupo != null) {
-      // Se uma nova imagem foi selecionada, faça o upload
-      imageUrl = await GroupService().uploadGroupImage(imagemDoGrupo!.path);
+    if (nomeDoGrupo.isEmpty) {
+      // Mostrar erro se o nome do grupo estiver vazio
+      return;
     }
 
-    // Atualize o registro do grupo com o novo nome e a nova imagem (se houver)
-    FirebaseFirestore.instance.collection('Groups').doc(widget.groupId).update({
-      'name': nomeDoGrupo,
-      'imageUrl': imageUrl,
-    });
+    String? imageUrl = widget.groupImage; // Começa com a imagem atual do grupo
 
-    Navigator.of(context).pop();
-    // Mostrar confirmação e retornar para a tela anterior
-  } catch (e) {
-    print('Erro ao salvar alterações: $e');
-    // Mostrar erro
+    try {
+      if (imagemDoGrupo != null) {
+        // Se uma nova imagem foi selecionada, faça o upload
+        imageUrl = await GroupService().uploadGroupImage(imagemDoGrupo!.path);
+      }
+
+      // Atualize o registro do grupo com o novo nome e a nova imagem (se houver)
+      FirebaseFirestore.instance
+          .collection('Groups')
+          .doc(widget.groupId)
+          .update({
+        'name': nomeDoGrupo,
+        'imageUrl': imageUrl,
+      });
+
+      Navigator.of(context).pop();
+      // Mostrar confirmação e retornar para a tela anterior
+    } catch (e) {
+      print('Erro ao salvar alterações: $e');
+      // Mostrar erro
+    }
   }
-}
-
 
   @override
   void initState() {
     super.initState();
     nomeGrupoController = TextEditingController(text: widget.groupName);
     if (widget.groupImage.isNotEmpty) {
-      imagemDoGrupo = File(widget.groupImage); // Inicializar com a imagem atual do grupo
+      imagemDoGrupo =
+          File(widget.groupImage); // Inicializar com a imagem atual do grupo
     }
   }
 
@@ -103,10 +104,10 @@ class _EditarGrupoScreenState extends State<EditarGrupoScreen> {
                     shape: BoxShape.circle,
                     color: Colors.grey[700],
                     image: DecorationImage(
-                      image: imagemDoGrupo != null
-                      ? FileImage(imagemDoGrupo!) as ImageProvider
-                      : NetworkImage(widget.groupId) // Placeholder image
-                ),
+                        image: imagemDoGrupo != null
+                            ? FileImage(imagemDoGrupo!) as ImageProvider
+                            : NetworkImage(widget.groupId) // Placeholder image
+                        ),
                   ),
                 ),
                 Positioned(
