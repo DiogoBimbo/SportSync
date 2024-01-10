@@ -56,8 +56,9 @@ class HomePage extends StatelessWidget {
                           height: 50.0,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
+                              Navigator.of(context)
+                                  .pushReplacement(MaterialPageRoute(
+                                builder: (context) => LoginScreen(),
                               ));
                             },
                             style: ElevatedButton.styleFrom(
@@ -83,9 +84,9 @@ class HomePage extends StatelessWidget {
                           height: 50.0,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.of(context).push(
+                              Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()),
+                                    builder: (context) => LoginScreen()),
                               );
                             },
                             style: ElevatedButton.styleFrom(

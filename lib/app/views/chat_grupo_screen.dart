@@ -1,21 +1,54 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pi_app/app/functions/funcoes.dart';
 import 'package:pi_app/app/styles/styles.dart';
 import 'package:pi_app/app/views/chat_screen.dart';
-import 'package:pi_app/app/views/informacoes_grupo.dart';
+import 'package:pi_app/app/views/informacoes_grupo_screen.dart';
+import 'package:pi_app/app/views/missoes_grupo_screen.dart';
 
 class ChatGrupoScreen extends StatefulWidget {
   final String nomeDoGrupo;
   final String imagemDoGrupo;
+  final String groupId;
 
   const ChatGrupoScreen(
-      {super.key, required this.nomeDoGrupo, required this.imagemDoGrupo});
+      {super.key,
+      required this.nomeDoGrupo,
+      required this.imagemDoGrupo,
+      required this.groupId});
 
   @override
   _ChatGrupoScreenState createState() => _ChatGrupoScreenState();
 }
 
 class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
+  String nomeDoGrupo = '';
+  String imagemDoGrupo = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchGroupInfo();
+  }
+
+  void fetchGroupInfo() async {
+    DocumentReference groupRef =
+        FirebaseFirestore.instance.collection('Groups').doc(widget.groupId);
+
+    groupRef.get().then((DocumentSnapshot snapshot) {
+      if (snapshot.exists && snapshot.data() != null) {
+        setState(() {
+          nomeDoGrupo = snapshot['name'] ?? '';
+          imagemDoGrupo = snapshot['imageUrl'] ?? '';
+        });
+      }
+    }).catchError((error) {
+      print('Erro ao buscar informações do grupo: $error');
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,14 +60,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const InformacoesGrupoScreen(
-                      usuarioEhDono:
-                          true, // implementar a obtenção do status de dono do grupo do banco de dados
-                      nomeDoGrupo:
-                          'Nome do grupo', // implementar a obtenção do nome do grupo do banco de dados
-                      imagemDoGrupo:
-                          'https://via.placeholder.com/150' // implementar a obtenção da imagem do grupo do banco de dados
-                      ),
+                  builder: (context) => InformacoesGrupoScreen(groupId: widget.groupId,),
                 ),
               );
             },
@@ -49,7 +75,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(limitarString(widget.nomeDoGrupo, 18),
+                    Text(limitarString(widget.nomeDoGrupo, 13),
                         style: Styles.tituloBarra),
                     const SizedBox(height: 1.0),
                     const Text('Toque para dados do grupo',
@@ -67,14 +93,7 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const InformacoesGrupoScreen(
-                      usuarioEhDono:
-                          true, // implementar a obtenção do status de dono do grupo do banco de dados
-                      nomeDoGrupo:
-                          'Nome do grupo', // implementar a obtenção do nome do grupo do banco de dados
-                      imagemDoGrupo:
-                          'https://via.placeholder.com/150' // implementar a obtenção da imagem do grupo do banco de dados
-                      ),
+                  builder: (context) => InformacoesGrupoScreen(groupId: widget.groupId,),
                 ),
               );
             },
@@ -95,7 +114,12 @@ class _ChatGrupoScreenState extends State<ChatGrupoScreen> {
                   backgroundColor: Styles.corPrincipal, // corPrincipal
                 ),
                 onPressed: () {
-                  // Implemente a ação do botão aqui
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MissoesGrupoScreen(groupId: widget.groupId,),
+                    ),
+                  );
                 },
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.0),

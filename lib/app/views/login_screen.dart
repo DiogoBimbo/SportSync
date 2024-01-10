@@ -1,47 +1,98 @@
+import 'dart:math';
+import 'package:pi_app/app/components/imagens.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
+import 'package:pi_app/app/views/geral_screen.dart';
+import 'package:pi_app/app/views/home_screen.dart';
 import 'amigos_inicial_screen.dart';
 import 'package:pi_app/app/styles/styles.dart';
 
-const users = {
-  'dribbble@gmail.com': '12345',
-  'hunter@gmail.com': 'hunter',
-};
+class LoginScreen extends StatefulWidget {
+  LoginScreen({Key? key}) : super(key: key);
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  final email = TextEditingController();
+  final senha = TextEditingController();
+  bool isSigningUp = false;
+
+  Future<String?> _authUser(LoginData data) async {
+    isSigningUp = false;
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: data.name,
+        password: data.password,
+      );
+      // Sucesso: retorna null
+      return null;
+    } on FirebaseAuthException catch (e) {
+      // Falha: retorna a mensagem de erro
+      return e.message;
+    }
+  }
+
+  Future<String?> _signupUser(SignupData data) async {
+    isSigningUp = true;
+    try {
+      // Criação da conta do usuário
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: data.name!,
+        password: data.password!,
+      );
+
+      // Extrair nome do usuário a partir do e-mail
+      String userName = data.name!.split('@').first;
+
+      // Selecionar uma foto aleatória de um conjunto de fotos
+      List<String> photoList = [
+        ImagensUsers.userImg1,
+        ImagensUsers.userImg2,
+        ImagensUsers.userImg3,
+        ImagensUsers.userImg4,
+        ImagensUsers.userImg5,
+        ImagensUsers.userImg6,
+        ImagensUsers.userImg7,
+        ImagensUsers.userImg8,
+        ImagensUsers.userImg9,
+        ImagensUsers.userImg10
+      ];
+      Random random = Random();
+      String randomPhoto = photoList[random.nextInt(photoList.length)];
+
+      // Salvar informações adicionais no Firestore
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'name': userName,
+        'photo': randomPhoto,
+      });
+
+      return null; // Sucesso
+    } on FirebaseAuthException catch (e) {
+      return e.message; // Falha
+    }
+  }
+
+  Future<String?> _recoverPassword(String name) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: name);
+      // Se o email for enviado com sucesso, retornamos null, indicando que não houve erro.
+      return null;
+    } on FirebaseAuthException catch (e) {
+      // Se houver um erro, retornamos a mensagem de erro.
+      return e.message;
+    }
+  }
 
   Duration get loginTime => const Duration(milliseconds: 2250);
-
-  Future<String> _authUser(LoginData data) {
-    debugPrint('Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(data.name)) {
-        return 'User not exists';
-      }
-      if (users[data.name] != data.password) {
-        return 'Password does not match';
-      }
-      return '';
-    });
-  }
-
-  Future<String> _signupUser(SignupData data) {
-    debugPrint('Signup Name: ${data.name}, Password: ${data.password}');
-    return Future.delayed(loginTime).then((_) {
-      return '';
-    });
-  }
-
-  Future<String> _recoverPassword(String name) {
-    debugPrint('Name: $name');
-    return Future.delayed(loginTime).then((_) {
-      if (!users.containsKey(name)) {
-        return 'User not exists';
-      }
-      return '';
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +107,10 @@ class LoginScreen extends StatelessWidget {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        const AmigosInicialScreen()),
+                  builder: (BuildContext context) => isSigningUp
+                      ? const AmigosInicialScreen()
+                      : GeralScreen(),
+                ),
                 (route) => false,
               );
             },
@@ -75,7 +128,7 @@ class LoginScreen extends StatelessWidget {
               recoverPasswordIntro: 'Recupere sua senha aqui',
               recoverPasswordDescription:
                   'Nós enviaremos sua senha em texto para esta conta de email',
-              recoverPasswordSuccess: 'Senha recuperada com sucesso!',
+              recoverPasswordSuccess: 'Email de alteração de senha enviado!',
             ),
             theme: LoginTheme(
               accentColor: Styles.corPrincipal,
@@ -123,7 +176,9 @@ class LoginScreen extends StatelessWidget {
             child: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
             ),
           ),

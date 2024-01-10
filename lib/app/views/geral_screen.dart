@@ -2,16 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:pi_app/app/views/amigos_screen.dart';
 import 'package:pi_app/app/views/grupos_screen.dart';
 import 'package:pi_app/app/views/local_screen.dart';
-import 'package:pi_app/app/views/minha_conta.dart';
+import 'package:pi_app/app/views/minha_conta_screen.dart';
 
-List<String> titles = <String>['Grupos', 'Amigos', 'Locais', 'Missões'];
+List<String> titles = <String>['Grupos', 'Amigos', 'Locais'];
 
-class GeralScreen extends StatelessWidget {
+class GeralScreen extends StatefulWidget {
   const GeralScreen({Key? key}) : super(key: key);
 
   @override
+  _GeralScreenState createState() => _GeralScreenState();
+}
+
+class _GeralScreenState extends State<GeralScreen> {
+
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    const int tabsCount = 4;
+    const int tabsCount = 3;
 
     return DefaultTabController(
       initialIndex: 0,
@@ -26,24 +39,23 @@ class GeralScreen extends StatelessWidget {
           ),
           actions: [
             IconButton(
-              icon: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://via.placeholder.com/150'), // Colocar a imagem do usuário integrado com backend
-              ),
+              icon: const Icon(Icons.account_circle),
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MinhaContaScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const MinhaContaScreen(),
+                  ),
                 );
               },
-            ),
+            )
           ],
         ),
         body: const TabBarView(
           children: <Widget>[
             GruposScreen(),
             AmigosScreen(),
-            LocalScreen(),
+            LocalScreen()
           ],
         ),
         bottomNavigationBar: Material(
@@ -81,11 +93,7 @@ class GeralScreen extends StatelessWidget {
                 Tab(
                   icon: const Icon(Icons.location_on),
                   text: titles[2],
-                ),
-                Tab(
-                  icon: const Icon(Icons.star),
-                  text: titles[3],
-                ),
+                )
               ],
             ),
           ),
